@@ -22,5 +22,10 @@ logging.level:
   org.springframework.web.cors.DefaultCorsProcessor: TRACE
 #서명 key로 사용할 임의의 문자 16byte
 jwt:
+  header: Authorization
   expiration_time: 86400000 #1일
-  secret: oWjCiLvDDj8eNJeEPHIfaAzhnj4MNiSrAMv6NBc4aGETGR6uZvqSYPWHid3lq984
+  secret: SWyOuidP3cBXYp667MnXFOLZklTgfi6JufSq5Ptr6Elugp3VrZOuT5AYCyt2qZvklHxaAxuesGJg6BT35tge8p
+
+logging:
+  level:
+    root: debug

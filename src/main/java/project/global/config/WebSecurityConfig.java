@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import project.domain.member.jwt.JwtAccessDeniedHandler;
+import project.domain.member.jwt.JwtAuthenticationEntryPoint;
 import project.domain.member.jwt.JwtFilter;
 import project.domain.member.jwt.TokenProvider;
 
@@ -25,13 +28,17 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
+@EnableMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
 public class WebSecurityConfig {
 
     private final TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final String[] publicAPI = {
         "/api/test",
         "/api/login",
-        "/api/join"
+        "/api/join",
+        "/api/authenticate"
     };
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -56,6 +63,10 @@ public class WebSecurityConfig {
         http
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(c -> c.disable())
+                .exceptionHandling( exceptionHandling -> {
+                    exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .accessDeniedHandler(jwtAccessDeniedHandler);
+                })
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(httpBasic ->httpBasic.disable())
                 .sessionManagement( (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -65,6 +76,8 @@ public class WebSecurityConfig {
                             .anyRequest()
                             .authenticated();
                 } );
+
+
         //JWT 인증 가장 먼저하기
         http.addFilterBefore(
                 new JwtFilter(tokenProvider),

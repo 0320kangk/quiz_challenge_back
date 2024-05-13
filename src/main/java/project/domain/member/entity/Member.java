@@ -33,10 +33,6 @@ public class Member {
     private String password;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Column(nullable = false)
     LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "sender")
@@ -48,7 +44,7 @@ public class Member {
     @ManyToMany
     @JoinTable(
             name = "member_authority",
-            joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "member_id")},
+            joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 

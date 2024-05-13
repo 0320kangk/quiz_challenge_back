@@ -41,13 +41,13 @@ public class MemberService {
 
     // 유저,권한 정보를 가져오는 메소드
     @Transactional(readOnly = true)
-    public Optional<Member> getUserWithAuthorities(String username) {
+    public Optional<Member> getMemberWithAuthorities(String username) {
         return memberRepository.findOneWithAuthoritiesByEmail(username);
     }
 
     // 현재 securityContext에 저장된 username의 정보만 가져오는 메소드
     @Transactional(readOnly = true)
-    public Optional<Member> getMyUserWithAuthorities() {
+    public Optional<Member> getMyMemberWithAuthorities() {
         return SecurityUtil.getCurrentUsername()
                 .flatMap(memberRepository::findOneWithAuthoritiesByEmail);
     }

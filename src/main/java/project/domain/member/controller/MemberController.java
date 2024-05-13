@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import project.domain.member.dto.JoinFormDto;
 import project.domain.member.entity.Member;
@@ -30,16 +29,16 @@ public class MemberController {
 
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/member")
+    @PreAuthorize("hasAnyRole('GUEST','ADMIN')")
     public ResponseEntity<Member> getMyUserInfo() {
-        return ResponseEntity.ok(memberService.getMyUserWithAuthorities().get());
+        return ResponseEntity.ok(memberService.getMyMemberWithAuthorities().get());
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/member/{memberName}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Member> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(memberService.getUserWithAuthorities(username).get());
+    public ResponseEntity<Member> getUserInfo(@PathVariable("memberName") String memberName) {
+        return ResponseEntity.ok(memberService.getMemberWithAuthorities(memberName).get());
     }
 
   /*  @GetMapping("/api/test")
