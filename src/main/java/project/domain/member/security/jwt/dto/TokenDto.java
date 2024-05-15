@@ -1,4 +1,4 @@
-package project.domain.member.jwt.dto;
+package project.domain.member.security.jwt.dto;
 
 import lombok.*;
 

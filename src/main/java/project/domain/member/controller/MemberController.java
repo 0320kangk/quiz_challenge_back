@@ -26,7 +26,6 @@ public class MemberController {
             return ResponseEntity.badRequest().body("비밀번호가 다릅니다.");
         }
         memberService.joinMember(joinFormDto);
-
         return ResponseEntity.ok().build();
     }
     @GetMapping("/member")
@@ -40,7 +39,6 @@ public class MemberController {
     public ResponseEntity<Member> getUserInfo(@PathVariable("memberName") String memberName) {
         return ResponseEntity.ok(memberService.getMemberWithAuthorities(memberName).get());
     }
-
   /*  @GetMapping("/api/test")
     public String TEST() {
         log.info("test: test");

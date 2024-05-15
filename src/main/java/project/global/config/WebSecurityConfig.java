@@ -16,10 +16,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import project.domain.member.jwt.JwtAccessDeniedHandler;
-import project.domain.member.jwt.JwtAuthenticationEntryPoint;
-import project.domain.member.jwt.JwtFilter;
-import project.domain.member.jwt.TokenProvider;
+import project.domain.member.security.jwt.JwtAccessDeniedHandler;
+import project.domain.member.security.jwt.JwtAuthenticationEntryPoint;
+import project.domain.member.security.jwt.JwtFilter;
+import project.domain.member.security.jwt.TokenProvider;
 
 import java.util.Arrays;
 
@@ -35,7 +35,6 @@ public class WebSecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final String[] publicAPI = {
-        "/api/test",
         "/api/login",
         "/api/join",
         "/api/authenticate"
@@ -44,16 +43,13 @@ public class WebSecurityConfig {
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
         config.setAllowCredentials(true);
         config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("HEAD","POST","GET","DELETE","PUT"));
         config.setAllowedHeaders(Arrays.asList("*"));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
@@ -63,7 +59,7 @@ public class WebSecurityConfig {
         http
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(c -> c.disable())
-                .exceptionHandling( exceptionHandling -> {
+                .exceptionHandling(exceptionHandling -> {
                     exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                     .accessDeniedHandler(jwtAccessDeniedHandler);
                 })
@@ -76,16 +72,12 @@ public class WebSecurityConfig {
                             .anyRequest()
                             .authenticated();
                 } );
-
-
         //JWT 인증 가장 먼저하기
         http.addFilterBefore(
                 new JwtFilter(tokenProvider),
                 UsernamePasswordAuthenticationFilter.class
         );
-
         return http.build();
-
     }
 
 

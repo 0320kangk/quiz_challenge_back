@@ -1,6 +1,7 @@
 package project.domain.member.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import project.domain.game.entity.ChatMessage;
 import project.domain.game.entity.ChatRoom;
@@ -31,6 +32,9 @@ public class Member {
 
     @Column(nullable = true)
     private String password;
+
+    @JsonIgnore
+    private boolean activated;
 
     @Column(nullable = false)
     LocalDateTime createdDate;

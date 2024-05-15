@@ -26,6 +26,6 @@ jwt:
   expiration_time: 86400000 #1일
   secret: SWyOuidP3cBXYp667MnXFOLZklTgfi6JufSq5Ptr6Elugp3VrZOuT5AYCyt2qZvklHxaAxuesGJg6BT35tge8p
 
-logging:
-  level:
-    root: debug
+#logging:
+#  level:
+#    root: debug
