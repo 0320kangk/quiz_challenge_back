@@ -30,7 +30,7 @@ public class MemberController {
     }
     @GetMapping("/member")
     @PreAuthorize("hasAnyRole('GUEST','ADMIN')")
-    public ResponseEntity<Member> getMyUserInfo() {
+    public ResponseEntity<Member> getMyMemberInfo() {
         return ResponseEntity.ok(memberService.getMyMemberWithAuthorities().get());
     }
 

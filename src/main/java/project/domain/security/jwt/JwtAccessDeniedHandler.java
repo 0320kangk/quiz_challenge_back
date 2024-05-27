@@ -1,4 +1,4 @@
-package project.domain.member.security.jwt;
+package project.domain.security.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

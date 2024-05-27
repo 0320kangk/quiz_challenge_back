@@ -1,13 +1,15 @@
-package project.domain.member.security.jwt;
+package project.domain.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,19 +27,23 @@ import java.util.stream.Collectors;
 public class TokenProvider implements InitializingBean {
     private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long accessTokenValidityInMilliseconds;
+    private final long refreshTokenValidityInMilliseconds;
+
+    private final RedisTemplate<String, String> redisTemplate;
+
     private Key key;
 
-    /**
-     *
-     * @param secret 6bit 단위의 base64 문자열
-     * @param tokenValidityInSeconds
-     */
+    @Autowired
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.expiration_time}") long tokenValidityInSeconds) {
+            @Value("${jwt.access_token_expiration_time}") long accessTokenValidityInSeconds,
+            @Value("${jwt.refresh_token_expiration_time}") long refreshTokenValidityInSeconds,
+            @Qualifier("customRedisTemplate") RedisTemplate<String, String> redisTemplate) {
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.accessTokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000;
+        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInSeconds * 1000;
+        this.redisTemplate = redisTemplate;
     }
 
     // 빈이 생성되고 주입을 받은 후에 secret값을 Base64 Decode해서 key 변수에 할당하기 위해
@@ -54,16 +61,14 @@ public class TokenProvider implements InitializingBean {
      * @param authentication
      * @return
      */
-    public String createToken(Authentication authentication) {
-
-
+    public String createAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         // 토큰의 expire 시간을 설정
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(now + this.accessTokenValidityInMilliseconds);
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
@@ -72,6 +77,34 @@ public class TokenProvider implements InitializingBean {
                 .setExpiration(validity)
                 .compact();
     }
+    public String createRefreshToken(Authentication authentication) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        // 토큰의 expire 시간을 설정
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+
+        String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+
+        redisTemplate.opsForValue().set(
+                authentication.getName(),
+                refreshToken,
+                refreshTokenValidityInMilliseconds,
+                TimeUnit.MILLISECONDS
+        );
+
+
+        return refreshToken;
+    }
+
 
     // 토큰으로 클레임을 만들고 이를 이용해 유저 객체를 만들어서 최종적으로 authenticat                               ion 객체를 리턴
     public Authentication getAuthentication(String token) {

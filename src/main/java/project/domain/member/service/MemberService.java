@@ -9,7 +9,7 @@ import project.domain.member.entity.Authority;
 import project.domain.member.entity.Member;
 import project.domain.member.entity.enumerate.Role;
 import project.domain.member.repository.MemberRepository;
-import project.domain.member.security.jwt.util.SecurityUtil;
+import project.domain.security.jwt.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

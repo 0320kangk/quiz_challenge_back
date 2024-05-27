@@ -1,4 +1,4 @@
-package project.domain.member.security.jwt.dto;
+package project.domain.security.jwt.dto;
 
 import lombok.*;
 
@@ -8,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public final class TokenDto {
-    private String token;
+    private String accessToken;
+    private String refreshToken;
 }

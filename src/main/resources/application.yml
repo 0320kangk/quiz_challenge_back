@@ -1,14 +1,12 @@
 spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  profiles:
+    active: local
   application:
     name: quiz_challenge_backend
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    #local??
-    url: jdbc:mysql://localhost:3306/quiz_challenge?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    #    docker ??
-    #    url: jdbc:mysql://mysql-container:3306/keyAppsk?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root #local, docker
-    password: 1234 #local. docker
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,9 +21,11 @@ logging.level:
 #서명 key로 사용할 임의의 문자 16byte
 jwt:
   header: Authorization
-  expiration_time: 86400000 #1일
+  access_token_expiration_time: 3600 #1시간
+  refresh_token_expiration_time: 86400 #1일
   secret: SWyOuidP3cBXYp667MnXFOLZklTgfi6JufSq5Ptr6Elugp3VrZOuT5AYCyt2qZvklHxaAxuesGJg6BT35tge8p
 
 #logging:
 #  level:
 #    root: debug
+

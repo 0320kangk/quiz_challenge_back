@@ -1,4 +1,4 @@
-package project.domain.member.security.jwt.util;
+package project.domain.security.jwt.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

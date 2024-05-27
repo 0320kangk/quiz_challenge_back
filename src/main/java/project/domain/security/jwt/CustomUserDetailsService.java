@@ -1,4 +1,4 @@
-package project.domain.member.security.jwt;
+package project.domain.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private User createUser(String memberName, Member member) {
-        log.info("creatUser error");
+        log.info("creatUser test: ");
 
         if (!member.isActivated()) {
             throw new RuntimeException(memberName + " -> 활성화되어 있지 않습니다.");

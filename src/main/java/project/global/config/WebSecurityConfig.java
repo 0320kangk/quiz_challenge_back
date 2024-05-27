@@ -16,10 +16,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import project.domain.member.security.jwt.JwtAccessDeniedHandler;
-import project.domain.member.security.jwt.JwtAuthenticationEntryPoint;
-import project.domain.member.security.jwt.JwtFilter;
-import project.domain.member.security.jwt.TokenProvider;
+import project.domain.security.jwt.JwtAccessDeniedHandler;
+import project.domain.security.jwt.JwtAuthenticationEntryPoint;
+import project.domain.security.jwt.JwtFilter;
+import project.domain.security.jwt.TokenProvider;
 
 import java.util.Arrays;
 
@@ -35,9 +35,8 @@ public class WebSecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final String[] publicAPI = {
-        "/api/login",
         "/api/join",
-        "/api/authenticate"
+        "/api/auth/login"
     };
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
