@@ -77,6 +77,8 @@ public class TokenProvider implements InitializingBean {
                 .setExpiration(validity)
                 .compact();
     }
+
+
     public String createRefreshToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -100,8 +102,6 @@ public class TokenProvider implements InitializingBean {
                 refreshTokenValidityInMilliseconds,
                 TimeUnit.MILLISECONDS
         );
-
-
         return refreshToken;
     }
 

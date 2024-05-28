@@ -21,7 +21,7 @@ logging.level:
 #서명 key로 사용할 임의의 문자 16byte
 jwt:
   header: Authorization
-  access_token_expiration_time: 3600 #1시간
+  access_token_expiration_time: 60 #1시간
   refresh_token_expiration_time: 86400 #1일
   secret: SWyOuidP3cBXYp667MnXFOLZklTgfi6JufSq5Ptr6Elugp3VrZOuT5AYCyt2qZvklHxaAxuesGJg6BT35tge8p
 

@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +29,7 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @PostMapping( "/auth/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginDto loginDto) {
         log.info("/authenticate TEST");
 
@@ -50,4 +52,16 @@ public class AuthController {
         //tokenDto 를 이용해 response body에도 넣어서 리턴
         return new ResponseEntity<>(new TokenDto(accessToken, refreshToken), httpHeaders, HttpStatus.OK);
     }
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<TokenDto> refreshToken(@Validated @RequestBody String refreshToken) throws AuthenticationException {
+        if(tokenProvider.validateToken(refreshToken)){
+            Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+            String accessToken = tokenProvider.createAccessToken(authentication);
+            String newRefreshToken = tokenProvider.createRefreshToken(authentication);
+            return new ResponseEntity<>(new TokenDto(accessToken, newRefreshToken), HttpStatus.OK);
+        }else {
+            throw new BadCredentialsException("유효하지 않은 자격증명입니다.");
+        }
+    }
+
 }
