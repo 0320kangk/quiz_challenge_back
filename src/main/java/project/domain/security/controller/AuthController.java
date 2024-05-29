@@ -1,7 +1,10 @@
 package project.domain.security.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.Token;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.domain.member.dto.LoginDto;
 import project.domain.security.jwt.JwtFilter;
 import project.domain.security.jwt.TokenProvider;
+import project.domain.security.jwt.dto.RefreshTokenDto;
 import project.domain.security.jwt.dto.TokenDto;
 
 @RestController
@@ -53,15 +54,12 @@ public class AuthController {
         return new ResponseEntity<>(new TokenDto(accessToken, refreshToken), httpHeaders, HttpStatus.OK);
     }
     @PostMapping("/auth/refresh")
-    public ResponseEntity<TokenDto> refreshToken(@Validated @RequestBody String refreshToken) throws AuthenticationException {
-        if(tokenProvider.validateToken(refreshToken)){
-            Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+    public ResponseEntity<TokenDto> refreshToken(@Validated @RequestBody RefreshTokenDto refreshTokenDto) throws AuthenticationException {
+             Authentication authentication = tokenProvider.getAuthentication(refreshTokenDto.getRefreshToken());
             String accessToken = tokenProvider.createAccessToken(authentication);
             String newRefreshToken = tokenProvider.createRefreshToken(authentication);
+            log.info("status test");
             return new ResponseEntity<>(new TokenDto(accessToken, newRefreshToken), HttpStatus.OK);
-        }else {
-            throw new BadCredentialsException("유효하지 않은 자격증명입니다.");
-        }
-    }
 
+    }
 }

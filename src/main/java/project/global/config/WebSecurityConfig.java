@@ -55,6 +55,8 @@ public class WebSecurityConfig {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        //JWT 인증 가장 먼저하기
+
         http
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(c -> c.disable())
@@ -71,7 +73,7 @@ public class WebSecurityConfig {
                             .anyRequest()
                             .authenticated();
                 } );
-        //JWT 인증 가장 먼저하기
+
         http.addFilterBefore(
                 new JwtFilter(tokenProvider),
                 UsernamePasswordAuthenticationFilter.class
