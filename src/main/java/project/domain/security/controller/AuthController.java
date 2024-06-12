@@ -29,16 +29,13 @@ import project.domain.security.jwt.dto.TokenDto;
 public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
     @PostMapping("/auth/login")
     public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginDto loginDto) {
         log.info("/authenticate TEST");
-
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
         // authenticate 메소드가 실행이 될 때 CustomUserDetailsService class의 loadUserByUsername 메소드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
         // 해당 객체를 SecurityContextHolder에 저장하고
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
@@ -61,5 +58,10 @@ public class AuthController {
             log.info("status test");
             return new ResponseEntity<>(new TokenDto(accessToken, newRefreshToken), HttpStatus.OK);
 
+    }
+    @PostMapping("/auth")
+    public ResponseEntity<Void> authCheck() throws AuthenticationException {
+
+        return ResponseEntity.ok().build();
     }
 }
