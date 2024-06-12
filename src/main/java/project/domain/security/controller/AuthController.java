@@ -61,7 +61,7 @@ public class AuthController {
     }
     @PostMapping("/auth")
     public ResponseEntity<Void> authCheck() throws AuthenticationException {
-
+        log.info("토큰 인증 200");
         return ResponseEntity.ok().build();
     }
 }
