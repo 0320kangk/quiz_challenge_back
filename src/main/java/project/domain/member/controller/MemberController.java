@@ -10,14 +10,12 @@ import project.domain.member.entity.Member;
 import project.domain.member.service.MemberService;
 
 import java.io.IOException;
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class MemberController {
     private final MemberService memberService;
-
     @PostMapping("/join")
     public ResponseEntity<?> joinMember(@RequestBody JoinFormDto joinFormDto) throws IOException {
         // RedirectView 생성 후 리다이렉트할 URL 설정

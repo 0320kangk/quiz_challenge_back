@@ -33,6 +33,7 @@ public class MemberService {
                 .email(joinFormDto.getEmail())
                 .password(bCryptPasswordEncoder.encode(joinFormDto.getPasswordOrigin()))
                 .authorities(Collections.singleton(authority))
+                .activated(true)
                 .createdDate(LocalDateTime.now())
                 .build();
 
