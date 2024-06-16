@@ -12,8 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -22,11 +25,22 @@ public class JwtFilter extends GenericFilterBean {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
 
+    // 필터링을 제외할 경로 리스트
+    private final List<String> excludeUrls = Arrays.asList("/api/join", "/api/auth/login", "/error");
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
+
+        log.info("requestURI: " + requestURI);
+        // 특정 경로에 대해 필터링 제외
+        if (excludeUrls.stream().anyMatch(requestURI::startsWith)) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
         log.info(jwt);
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
@@ -34,7 +48,7 @@ public class JwtFilter extends GenericFilterBean {
             log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
         } else {
             log.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
-//            throw new BadCredentialsException("유효한 JWT 토큰이 없습니다.");
+            throw new BadCredentialsException("유효한 JWT 토큰이 없습니다.");
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
