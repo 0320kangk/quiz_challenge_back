@@ -1,5 +1,6 @@
-package project.domain.game.entity;
+package project.domain.chat.chatMessage;
 
+import project.domain.chat.chatRoom.ChatRoom;
 import project.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
