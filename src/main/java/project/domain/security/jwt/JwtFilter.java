@@ -26,7 +26,7 @@ public class JwtFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
 
     // 필터링을 제외할 경로 리스트
-    private final List<String> excludeUrls = Arrays.asList("/api/join", "/api/auth/login", "/error");
+    private final List<String> excludeUrls = Arrays.asList("/api/join", "/api/auth/login", "/error","/api/chatGpt/completion");
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {

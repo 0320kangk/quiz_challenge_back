@@ -26,7 +26,9 @@ jwt:
   secret: SWyOuidP3cBXYp667MnXFOLZklTgfi6JufSq5Ptr6Elugp3VrZOuT5AYCyt2qZvklHxaAxuesGJg6BT35tge8p
 openai:
   api-key: ${CHAT_GPT_API_KEY}
-  api-url: https://api.openai.com/v1/engines/davinci-codex-turbo/completions
+  api-url: https://api.openai.com/v1/completions
+  api-url-chat: https://api.openai.com/v1/chat/completions
+# 추천 api https://api.openai.com/v1/chat/completions (대화형)
 #logging:
 #  level:
 #    root: debug

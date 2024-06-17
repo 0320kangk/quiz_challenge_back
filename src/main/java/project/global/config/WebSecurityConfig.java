@@ -36,7 +36,8 @@ public class WebSecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final String[] publicAPI = {
         "/api/join",
-        "/api/auth/login"
+        "/api/auth/login",
+            "/api/chatGpt/completion"
     };
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -56,7 +57,6 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //JWT 인증 가장 먼저하기
-
         http
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(c -> c.disable())
@@ -73,7 +73,6 @@ public class WebSecurityConfig {
                             .anyRequest()
                             .authenticated();
                 } );
-
         http.addFilterBefore(
                 new JwtFilter(tokenProvider),
                 UsernamePasswordAuthenticationFilter.class
