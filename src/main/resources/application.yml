@@ -24,7 +24,9 @@ jwt:
   access_token_expiration_time: 3600 #1시간
   refresh_token_expiration_time: 86400 #1일
   secret: SWyOuidP3cBXYp667MnXFOLZklTgfi6JufSq5Ptr6Elugp3VrZOuT5AYCyt2qZvklHxaAxuesGJg6BT35tge8p
-
+openai:
+  api-key: ${CHAT_GPT_API_KEY}
+  api-url: https://api.openai.com/v1/engines/davinci-codex-turbo/completions
 #logging:
 #  level:
 #    root: debug
