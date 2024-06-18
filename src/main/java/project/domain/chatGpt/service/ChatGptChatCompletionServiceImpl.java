@@ -46,7 +46,7 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         ChatCompletionRequestDto completionRequestDto = ChatCompletionRequestDto.builder()
                 .model("gpt-3.5-turbo")
                 .max_tokens(3200)
-                .temperature(0)
+                .temperature(1.0f)
                 .messages(messages)
                 .build();
         log.info("CHAT_GPT_API_KEY {}" , chatGptProperties.getApiKey());

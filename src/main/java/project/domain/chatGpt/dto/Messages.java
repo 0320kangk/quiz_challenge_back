@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class Messages{
     String role;
     String content;
-
-
 }
