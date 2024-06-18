@@ -24,11 +24,3 @@ public class QuizQuestion {
     @Column(nullable = false)
     String question;
 }
-/*
-제목
-주제
-질문을 갖는 테이블을 만들까
-
-제목은 외래키 로 사용될 듯
-
- */

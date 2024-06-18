@@ -13,6 +13,7 @@ public class ChatCompletionRequestDto {
     private String model;
     private float temperature;
     private Integer max_tokens;
+
     private Messages[] messages;
 
 }

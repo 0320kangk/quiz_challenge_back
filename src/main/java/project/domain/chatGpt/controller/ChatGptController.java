@@ -1,6 +1,7 @@
 package project.domain.chatGpt.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class ChatGptController {
 
 
     @PostMapping("/completion")
-    public String getCompletion(@RequestBody String prompt) {
+    public String getCompletion(@RequestBody String prompt) throws JsonProcessingException {
 //        return chatGptServiceImpl.getCompletion(prompt);
         return chatGptChatCompletionServiceImpl.getChatCompletion(prompt);
     }
