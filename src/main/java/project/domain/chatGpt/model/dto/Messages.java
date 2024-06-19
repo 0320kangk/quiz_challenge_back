@@ -1,4 +1,4 @@
-package project.domain.chatGpt.dto;
+package project.domain.chatGpt.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

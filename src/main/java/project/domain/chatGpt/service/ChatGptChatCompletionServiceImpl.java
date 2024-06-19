@@ -9,11 +9,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import project.domain.chatGpt.config.ChatGptProperties;
-import project.domain.chatGpt.dto.ChatCompletionRequestDto;
-import project.domain.chatGpt.dto.ChatCompletionResponseDto;
-import project.domain.chatGpt.dto.Messages;
+import project.domain.chatGpt.model.dto.ChatCompletionRequestDto;
+import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
+import project.domain.chatGpt.model.dto.Messages;
+import project.domain.chatGpt.model.dto.QuestionRequestDto;
+import project.domain.chatGpt.model.entity.QuizQuestion;
+import project.domain.chatGpt.model.entity.QuizTitle;
+import project.domain.chatGpt.repository.QuizQuestionsRepository;
+import project.domain.chatGpt.repository.QuizTitleRepository;
+import project.domain.chatGpt.util.ChatGptUtil;
+
+import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -23,52 +33,36 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
     private final ChatGptProperties chatGptProperties;
 
     private final RestTemplate restTemplate;
+    private final QuizQuestionsRepository quizQuestionsRepository;
+    private final QuizTitleRepository quizTitleRepository;
     @Override
-    public String getChatCompletion(String prompt) throws JsonProcessingException {
-        String apiUrl = chatGptProperties.getApiUrlChat();
-
+    @Transactional
+    public String getChatCompletion(QuestionRequestDto questionRequestDto) throws JsonProcessingException {
+        String apiUrl = chatGptProperties.getApiChatUrl();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + chatGptProperties.getApiKey());
+        String systemContent = ChatGptUtil.createSystemContent(questionRequestDto);
+        QuizTitle quizTitle = quizTitleRepository.findByTitle(questionRequestDto.getTitle()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        List<QuizQuestion> byQuizTitle = quizQuestionsRepository.findByQuizTitle(quizTitle);
 
-        Messages  m1 = Messages
+        Random random = new Random();
+        QuizQuestion quizQuestion = byQuizTitle.get(random.nextInt(byQuizTitle.size()));
+
+
+        Messages  systemMessage = Messages
                 .builder()
                 .role("system")
-                .content("""
-                        You need to create a quiz question. Answer all questions in Korean. Please create 10 5-choice quiz questions about the Spring Framework. I would like each question to be provided in JSON format. The JSON structure should look like this: {
-                          "question": "Question content",
-                          "options": [
-                            "Choice 1",
-                            "Choice 2",
-                            "Choice 3",
-                            "Choice 4",
-                            "Choice 5"
-                          ],
-                          "answer": "Correct answer option number (0-4)"
-                        } Example: {
-                          "question": "Spring Framework의 핵심 기능은 무엇인가요?",
-                          "options": [
-                            "의존성 주입",
-                            "관점 지향 프로그래밍",
-                            "스프링 부트",
-                            "스프링 클라우드",
-                            "모듈화"
-                          ],
-                          "answer": 0
-                        }
-                        also { \\"response_format\\": { \\"type\\": \\"json_object\\" }
-                        """)
+                .content(systemContent)
                 .build();
-        Messages m2 =Messages
+        Messages userMessage = Messages
                 .builder()
                 .role("user")
-                .content(prompt)
+                .content(quizQuestion.getTopic())
                 .build();
         Messages[] messages = new Messages[2];
-        messages[0] = m1;
-        messages[1] = m2;
-        //chat 형은 gpt-3.5-turbo
-        //prompt 는gpt-3.5-turbo-instruct
+        messages[0] = systemMessage;
+        messages[1] = userMessage;
         ChatCompletionRequestDto completionRequestDto = ChatCompletionRequestDto.builder()
                 .model("gpt-3.5-turbo")
                 .max_tokens(3200)
@@ -79,6 +73,8 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         HttpEntity<ChatCompletionRequestDto> entity = new HttpEntity<>(completionRequestDto, headers);
         ObjectMapper mapper = new ObjectMapper();
 
+        //다양한 주제를 이용하여 만들어야 함
+        //
         String body = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class).getBody();
         ChatCompletionResponseDto response = mapper.readValue(body, ChatCompletionResponseDto.class);
         log.info("json data response : {}", response);

@@ -37,7 +37,8 @@ public class WebSecurityConfig {
     private final String[] publicAPI = {
         "/api/join",
         "/api/auth/login",
-            "/api/chatGpt/completion"
+            "/api/chatGpt/completion",
+            "/api/chatGpt/chat/completion"
     };
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {

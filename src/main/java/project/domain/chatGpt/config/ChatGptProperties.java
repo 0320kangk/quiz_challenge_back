@@ -14,8 +14,8 @@ public class ChatGptProperties {
     private String apiKey;
 
     @Value("${openai.api-url}")
-    private String apiUrl;
+    private String apiCompletionUrl;
 
     @Value("${openai.api-url-chat}")
-    private String apiUrlChat;
+    private String apiChatUrl;
 }

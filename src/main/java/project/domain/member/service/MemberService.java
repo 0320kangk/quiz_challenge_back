@@ -45,7 +45,6 @@ public class MemberService {
     public Optional<Member> getMemberWithAuthorities(String username) {
         return memberRepository.findOneWithAuthoritiesByEmail(username);
     }
-
     // 현재 securityContext에 저장된 username의 정보만 가져오는 메소드
     @Transactional(readOnly = true)
     public Optional<Member> getMyMemberWithAuthorities() {

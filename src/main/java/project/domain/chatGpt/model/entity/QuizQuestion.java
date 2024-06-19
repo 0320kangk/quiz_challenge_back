@@ -1,4 +1,4 @@
-package project.domain.chatGpt.entity;
+package project.domain.chatGpt.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +21,4 @@ public class QuizQuestion {
     @Column(nullable = false)
     String topic;
 
-    @Column(nullable = false)
-    String question;
 }

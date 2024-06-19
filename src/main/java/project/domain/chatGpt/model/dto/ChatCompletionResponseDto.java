@@ -1,4 +1,4 @@
-package project.domain.chatGpt.dto;
+package project.domain.chatGpt.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,6 @@ public class ChatCompletionResponseDto {
     @Getter
     @Setter
     @ToString
-
     public static class Choice {
         private int index;
         private Message message;
@@ -31,7 +30,6 @@ public class ChatCompletionResponseDto {
     @Getter
     @Setter
     @ToString
-
     public static class Message {
         private String role;
         private String content;
@@ -41,7 +39,6 @@ public class ChatCompletionResponseDto {
     @Getter
     @Setter
     @ToString
-
     public static class Usage {
         private int prompt_tokens;
         private int completion_tokens;

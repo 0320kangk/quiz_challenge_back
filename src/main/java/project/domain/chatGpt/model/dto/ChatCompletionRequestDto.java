@@ -1,4 +1,4 @@
-package project.domain.chatGpt.dto;
+package project.domain.chatGpt.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,5 @@ public class ChatCompletionRequestDto {
     private String model;
     private float temperature;
     private Integer max_tokens;
-
     private Messages[] messages;
-
 }

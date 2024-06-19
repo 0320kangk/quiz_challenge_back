@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.domain.chatGpt.model.dto.QuestionRequestDto;
 import project.domain.chatGpt.service.ChatGptChatCompletionServiceImpl;
 import project.domain.chatGpt.service.ChatGptCompletionServiceImpl;
 
@@ -19,9 +20,9 @@ public class ChatGptController {
     private final ChatGptChatCompletionServiceImpl chatGptChatCompletionServiceImpl;
 
 
-    @PostMapping("/completion")
-    public String getCompletion(@RequestBody String prompt) throws JsonProcessingException {
-//        return chatGptServiceImpl.getCompletion(prompt);
-        return chatGptChatCompletionServiceImpl.getChatCompletion(prompt);
+    @PostMapping("/chat/completion")
+    public String getCompletion(@RequestBody QuestionRequestDto questionRequestDto) throws JsonProcessingException {
+
+        return chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
     }
 }

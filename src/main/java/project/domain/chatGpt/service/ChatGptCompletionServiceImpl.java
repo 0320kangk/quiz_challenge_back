@@ -9,9 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import project.domain.chatGpt.config.ChatGptProperties;
-import project.domain.chatGpt.dto.ChatCompletionRequestDto;
-import project.domain.chatGpt.dto.CompletionRequestDto;
-import project.domain.chatGpt.dto.Messages;
+import project.domain.chatGpt.model.dto.CompletionRequestDto;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +21,7 @@ public class ChatGptCompletionServiceImpl implements ChatGptCompletionService {
 
     @Override
     public String getCompletion(String prompt) {
-        String apiUrl = chatGptProperties.getApiUrl();
+        String apiUrl = chatGptProperties.getApiCompletionUrl();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
