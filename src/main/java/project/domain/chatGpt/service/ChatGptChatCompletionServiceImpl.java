@@ -21,6 +21,7 @@ import project.domain.chatGpt.model.entity.QuizTitle;
 import project.domain.chatGpt.repository.QuizQuestionsRepository;
 import project.domain.chatGpt.repository.QuizTitleRepository;
 import project.domain.chatGpt.util.ChatGptUtil;
+import project.domain.chatGpt.util.QuestionsFormatting;
 
 import java.util.List;
 import java.util.Random;
@@ -42,13 +43,15 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + chatGptProperties.getApiKey());
-        String systemContent = ChatGptUtil.createSystemContent(questionRequestDto);
+
+        String systemContent = ChatGptUtil.createSystemContent(ChatGptUtil.createSystemQuestion(questionRequestDto));
+        log.info("questionRequestDto.getTitle() {}",questionRequestDto.getTitle());
         QuizTitle quizTitle = quizTitleRepository.findByTitle(questionRequestDto.getTitle()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         List<QuizQuestion> byQuizTitle = quizQuestionsRepository.findByQuizTitle(quizTitle);
 
         Random random = new Random();
         QuizQuestion quizQuestion = byQuizTitle.get(random.nextInt(byQuizTitle.size()));
-
+        String userContent = ChatGptUtil.createUserContent(questionRequestDto.getCount(), quizQuestion.getTopic());
 
         Messages  systemMessage = Messages
                 .builder()
@@ -58,7 +61,7 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         Messages userMessage = Messages
                 .builder()
                 .role("user")
-                .content(quizQuestion.getTopic())
+                .content(userContent)
                 .build();
         Messages[] messages = new Messages[2];
         messages[0] = systemMessage;
@@ -74,7 +77,9 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         ObjectMapper mapper = new ObjectMapper();
 
         //다양한 주제를 이용하여 만들어야 함
-        //
+        log.info("system content : {}", systemContent);
+        log.info("user content : {}", quizQuestion.getTopic());
+
         String body = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class).getBody();
         ChatCompletionResponseDto response = mapper.readValue(body, ChatCompletionResponseDto.class);
         log.info("json data response : {}", response);

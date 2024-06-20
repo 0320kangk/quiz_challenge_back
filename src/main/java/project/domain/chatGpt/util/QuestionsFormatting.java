@@ -1,19 +1,32 @@
 package project.domain.chatGpt.util;
 
 import project.domain.chatGpt.model.enums.QuizLevel;
+import project.domain.chatGpt.model.enums.QuizType;
 
 public class QuestionsFormatting {
-
-    public static String getQuestionPart1(QuizLevel quizLevel){
-        return String.format("You need to create quiz questions %s 5-choice quiz questions. Answer all questions in Korean.", quizLevel);
-    }
-    public static String getQuestionPart2(Integer count){
-        return String.format("Please create %d 5-choice quiz questions", count);
-    }
-    public static String getQuestionPart3(String title){
-        return String.format("about the %s", title);
-    }
-    public static final String questionPart4 = """
+    public static final String oxType = """
+            I would like each question to be provided in JSON format. The JSON structure should look like this: {
+                           "question": "Question content",
+                           "options": [
+                               "O",
+                               "X"
+                           ],
+                           "answer": "Correct answer option ('O' or 'X')"
+                       }
+                       
+                       Example:
+                       {
+                           "question": "Is Spring Framework based on JAVA?",
+                           "options": [
+                               "O",
+                               "X"
+                           ],
+                           "answer": "O"
+                          
+                       }
+                       The options value must be "O" or "X"
+                       """;
+    public static final String choiceType = """
              I would like each question to be provided in JSON format. The JSON structure should look like this: {
                           "question": "Question content",
                           "options": [
@@ -27,14 +40,35 @@ public class QuestionsFormatting {
                         } Example: {
                           "question": "Spring Framework의 핵심 기능은 무엇인가요?",
                           "options": [
-                            "의존성 주입",
-                            "관점 지향 프로그래밍",
-                            "스프링 부트",
-                            "스프링 클라우드",
-                            "모듈화"
+                            "Dependency Injection",
+                            "Aspect-Oriented Programming",
+                            "Spring Boot",
+                            "Spring Cloud",
+                            "Modularization"
                           ],
                           "answer": 0
                         }""";
 
+    public static String getQuestionPart1(QuizLevel quizLevel ){
+        return String.format("You need to create %s quiz questions. Answer all questions in Korean.", quizLevel);
+    }
 
+    public static String getQuestionPart2(String title){
+        return String.format("about the %s.", title);
+    }
+
+    public static String getQuestionPart3(QuizType quizType){
+        if (quizType == QuizType.CHOICE){
+            return choiceType;
+        }else{
+            return oxType;
+        }
+    }
+
+    public static String getUserQuestionPart1(Integer count) {
+        return "%d개 질문을 만들어라.\n".formatted(count);
+    }
+    public static String getUserQuestionPart2(String topic) {
+        return "주제는 %s.".formatted(topic);
+    }
 }
