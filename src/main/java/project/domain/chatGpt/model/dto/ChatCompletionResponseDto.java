@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -11,7 +13,7 @@ public class ChatCompletionResponseDto {
     private String id;
     private String object;
     private long created;
-    private Choice[] choices;
+    private List<Choice> choices;
     private String model; // 추가: JSON 데이터의 model 필드와 매핑될 필드
 
     private Usage usage;

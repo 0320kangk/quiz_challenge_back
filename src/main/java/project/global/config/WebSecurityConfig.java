@@ -20,6 +20,7 @@ import project.domain.security.jwt.JwtAccessDeniedHandler;
 import project.domain.security.jwt.JwtAuthenticationEntryPoint;
 import project.domain.security.jwt.JwtFilter;
 import project.domain.security.jwt.TokenProvider;
+import project.global.consts.UrlConst;
 
 import java.util.Arrays;
 
@@ -34,12 +35,6 @@ public class WebSecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final String[] publicAPI = {
-        "/api/join",
-        "/api/auth/login",
-            "/api/chatGpt/completion",
-            "/api/chatGpt/chat/completion"
-    };
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -69,7 +64,7 @@ public class WebSecurityConfig {
                 .httpBasic(httpBasic ->httpBasic.disable())
                 .sessionManagement( (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests( authorizeHttpRequestsConfigurer -> {
-                    authorizeHttpRequestsConfigurer.requestMatchers(publicAPI)
+                    authorizeHttpRequestsConfigurer.requestMatchers(UrlConst.publicAPI)
                             .permitAll()
                             .anyRequest()
                             .authenticated();

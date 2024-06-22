@@ -23,6 +23,7 @@ import project.domain.chatGpt.repository.QuizTitleRepository;
 import project.domain.chatGpt.util.ChatGptUtil;
 import project.domain.chatGpt.util.QuestionsFormatting;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -38,7 +39,7 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
     private final QuizTitleRepository quizTitleRepository;
     @Override
     @Transactional
-    public String getChatCompletion(QuestionRequestDto questionRequestDto) throws JsonProcessingException {
+    public ChatCompletionResponseDto getChatCompletion(QuestionRequestDto questionRequestDto) throws JsonProcessingException {
         String apiUrl = chatGptProperties.getApiChatUrl();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -63,13 +64,13 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
                 .role("user")
                 .content(userContent)
                 .build();
-        Messages[] messages = new Messages[2];
-        messages[0] = systemMessage;
-        messages[1] = userMessage;
+        List<Messages> messages = new ArrayList<Messages>();
+        messages.add(systemMessage);
+        messages.add(userMessage);
         ChatCompletionRequestDto completionRequestDto = ChatCompletionRequestDto.builder()
                 .model("gpt-3.5-turbo")
                 .max_tokens(3200)
-                .temperature(1.0f)
+                .temperature(0.7f)
                 .messages(messages)
                 .build();
         log.info("CHAT_GPT_API_KEY {}" , chatGptProperties.getApiKey());
@@ -83,6 +84,6 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         String body = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class).getBody();
         ChatCompletionResponseDto response = mapper.readValue(body, ChatCompletionResponseDto.class);
         log.info("json data response : {}", response);
-        return body;
+        return response;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
+import project.global.consts.UrlConst;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,30 +22,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends GenericFilterBean {
-
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
-
-    // 필터링을 제외할 경로 리스트
-    private final List<String> excludeUrls = Arrays.asList("/api/join",
-            "/api/auth/login", "/error",
-            "/api/chatGpt/completion",
-            "/api/chatGpt/chat/completion"
-    );
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
-
         log.info("requestURI: " + requestURI);
         // 특정 경로에 대해 필터링 제외
-        if (excludeUrls.stream().anyMatch(requestURI::startsWith)) {
+        if (Arrays.stream(UrlConst.publicAPI).anyMatch(requestURI::startsWith)) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
         log.info(jwt);
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
@@ -59,12 +50,9 @@ public class JwtFilter extends GenericFilterBean {
     // Request Header 에서 토큰 정보를 꺼내오기 위한 메소드
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
-
 }

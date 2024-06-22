@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @Builder
@@ -13,5 +15,5 @@ public class ChatCompletionRequestDto {
     private String model;
     private float temperature;
     private Integer max_tokens;
-    private Messages[] messages;
+    private List<Messages> messages;;
 }
