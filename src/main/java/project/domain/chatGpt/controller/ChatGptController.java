@@ -11,7 +11,6 @@ import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
 import project.domain.chatGpt.model.dto.ChatContentDto;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
 import project.domain.chatGpt.service.ChatGptChatCompletionServiceImpl;
-import project.domain.chatGpt.service.ChatGptCompletionServiceImpl;
 
 import java.util.List;
 
