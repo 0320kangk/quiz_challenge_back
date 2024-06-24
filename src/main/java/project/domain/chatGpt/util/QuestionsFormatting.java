@@ -5,17 +5,17 @@ import project.domain.chatGpt.model.enums.QuizType;
 
 public class QuestionsFormatting {
     public static final String oxType = """
-            I would like each question to be provided in JSON format. The JSON structure should look like this: {
+            I would like each question to be provided in JSON format. The JSON structure should look like this: [{
                            "question": "Question content",
                            "options": [
                                "O",
                                "X"
                            ],
                            "answer": "Correct answer option ('O' or 'X')"
-                       }
+                       },]
                        
                        Example:
-                       {
+                       [{
                            "question": "Is Spring Framework based on JAVA?",
                            "options": [
                                "O",
@@ -23,11 +23,11 @@ public class QuestionsFormatting {
                            ],
                            "answer": "O"
                           
-                       }
+                       },]
                        The options value must be "O" or "X"
                        """;
     public static final String choiceType = """
-             I would like each question to be provided in JSON format. The JSON structure should look like this: {
+             I would like each question to be provided in JSON format. The JSON structure should look like this: [{
                           "question": "Question content",
                           "options": [
                             "Choice 1",
@@ -37,7 +37,7 @@ public class QuestionsFormatting {
                             "Choice 5"
                           ],
                           "answer": "Correct answer option number (0-4)"
-                        } Example: {
+                        },] Example: [{
                           "question": "Spring Framework의 핵심 기능은 무엇인가요?",
                           "options": [
                             "Dependency Injection",
@@ -47,7 +47,7 @@ public class QuestionsFormatting {
                             "Modularization"
                           ],
                           "answer": 0
-                        }""";
+                        },]""";
 
     public static String getQuestionPart1(QuizLevel quizLevel ){
         return String.format("You need to create %s quiz questions. Answer all questions in Korean.", quizLevel);

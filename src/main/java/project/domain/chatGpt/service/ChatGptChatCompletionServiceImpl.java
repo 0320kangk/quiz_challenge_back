@@ -1,6 +1,7 @@
 package project.domain.chatGpt.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import project.domain.chatGpt.config.ChatGptProperties;
-import project.domain.chatGpt.model.dto.ChatCompletionRequestDto;
-import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
-import project.domain.chatGpt.model.dto.Messages;
-import project.domain.chatGpt.model.dto.QuestionRequestDto;
+import project.domain.chatGpt.model.dto.*;
 import project.domain.chatGpt.model.entity.QuizQuestion;
 import project.domain.chatGpt.model.entity.QuizTitle;
 import project.domain.chatGpt.repository.QuizQuestionsRepository;
@@ -82,8 +80,25 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         log.info("user content : {}", quizQuestion.getTopic());
 
         String body = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class).getBody();
+        log.info("json data body : {}", body);
+
+
         ChatCompletionResponseDto response = mapper.readValue(body, ChatCompletionResponseDto.class);
         log.info("json data response : {}", response);
+
         return response;
     }
+
+    public List<ChatContent> getChatContent(ChatCompletionResponseDto chatCompletionResponseDto) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<ChatContent> chatContents = null;
+        if(!chatCompletionResponseDto.getChoices().isEmpty()){
+            String content = chatCompletionResponseDto.getChoices().get(0).getMessage().getContent();
+            chatContents = mapper.readValue(content, new TypeReference<List<ChatContent>>(){});
+            System.out.println("Parsed ChatContent: " + chatContents);
+        }
+        
+       return chatContents;
+    }
+
 }

@@ -1,10 +1,9 @@
 package project.domain.chatGpt.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -14,10 +13,10 @@ public class ChatCompletionResponseDto {
     private String object;
     private long created;
     private List<Choice> choices;
-    private String model; // 추가: JSON 데이터의 model 필드와 매핑될 필드
-
+    private String model;
     private Usage usage;
     private String system_fingerprint;
+
     @Getter
     @Setter
     @ToString
@@ -29,15 +28,18 @@ public class ChatCompletionResponseDto {
 
         // getter, setter 메소드들 생략
     }
+
     @Getter
     @Setter
     @ToString
     public static class Message {
         private String role;
-        private String content;
+        private String content; // 수정된 부분
 
         // getter, setter 메소드들 생략
     }
+
+
     @Getter
     @Setter
     @ToString
