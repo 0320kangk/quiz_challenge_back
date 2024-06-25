@@ -2,18 +2,18 @@ package project.domain.chatGpt.controller;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
 import project.domain.chatGpt.model.dto.ChatContent;
-import project.domain.chatGpt.model.dto.ChatContentDto;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
 import project.domain.chatGpt.service.ChatGptChatCompletionServiceImpl;
 
@@ -35,12 +35,18 @@ public class ChatGptController {
         return chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
     }
     @PostMapping("/chat/completion/content")
-    public ResponseEntity<?> getChatCompletionContent(@RequestBody QuestionRequestDto questionRequestDto) throws JsonProcessingException {
+    public ResponseEntity<?> getChatCompletionContent(@RequestBody @Validated QuestionRequestDto questionRequestDto)  {
         int retries = 0;
-        List<ChatContent> chatContent = new ArrayList<>();;
+        List<ChatContent> chatContent = new ArrayList<>();
         while( chatContent.size() != questionRequestDto.getCount() && retries < MAX_RETRIES  ){
-            ChatCompletionResponseDto chatCompletion = chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
-            chatContent = chatGptChatCompletionServiceImpl.getChatContent(chatCompletion);
+            try {
+                ChatCompletionResponseDto chatCompletion = chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
+                chatContent = chatGptChatCompletionServiceImpl.getChatContent(chatCompletion);
+            }catch (JsonProcessingException e){
+                log.error("JSON 처리 중 오류 발생: {}", e.getMessage());
+                retries++;
+                continue; // 예외가 발생하면 재시도
+            }
             retries++;
         }
         log.info("chatContents : {} ", chatContent);
