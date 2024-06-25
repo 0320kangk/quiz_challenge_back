@@ -11,9 +11,10 @@ public class QuestionsFormatting {
                                "O",
                                "X"
                            ],
-                           "answer": "Correct answer option ('O' or 'X')"
+                           "answer": "Correct answer option ('O' or 'X')",
+                           "quizType": "OX"
                        },]
-                       
+                      
                        Example:
                        [{
                            "question": "Is Spring Framework based on JAVA?",
@@ -21,8 +22,8 @@ public class QuestionsFormatting {
                                "O",
                                "X"
                            ],
-                           "answer": "O"
-                          
+                           "answer": "O",
+                           "quizType": "OX"
                        },]
                        The options value must be "O" or "X"
                        """;
@@ -36,8 +37,11 @@ public class QuestionsFormatting {
                             "Choice 4",
                             "Choice 5"
                           ],
-                          "answer": "Correct answer option number (0-4)"
-                        },] Example: [{
+                          "answer": "Correct answer option number (0-4)",
+                          "quizType": "CHOICE_5"
+                        },]
+                         
+                         Example: [{
                           "question": "Spring Framework의 핵심 기능은 무엇인가요?",
                           "options": [
                             "Dependency Injection",
@@ -46,8 +50,10 @@ public class QuestionsFormatting {
                             "Spring Cloud",
                             "Modularization"
                           ],
-                          "answer": 0
-                        },]""";
+                          "answer": 0,
+                          "quizType": "CHOICE_5"
+                        },]
+                        """;
 
     public static String getQuestionPart1(QuizLevel quizLevel ){
         return String.format("You need to create %s quiz questions. Answer all questions in Korean.", quizLevel);
@@ -58,7 +64,7 @@ public class QuestionsFormatting {
     }
 
     public static String getQuestionPart3(QuizType quizType){
-        if (quizType == QuizType.CHOICE){
+        if (quizType == QuizType.CHOICE_5){
             return choiceType;
         }else{
             return oxType;
