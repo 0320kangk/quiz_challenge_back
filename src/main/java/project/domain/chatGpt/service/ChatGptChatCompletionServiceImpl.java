@@ -19,12 +19,9 @@ import project.domain.chatGpt.model.entity.QuizTitle;
 import project.domain.chatGpt.repository.QuizQuestionsRepository;
 import project.domain.chatGpt.repository.QuizTitleRepository;
 import project.domain.chatGpt.util.ChatGptUtil;
-import project.domain.chatGpt.util.QuestionsFormatting;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -62,6 +59,7 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
                 .role("user")
                 .content(userContent)
                 .build();
+
         List<Messages> messages = new ArrayList<Messages>();
         messages.add(systemMessage);
         messages.add(userMessage);
@@ -82,22 +80,18 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         String body = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class).getBody();
         log.info("json data body : {}", body);
 
-
         ChatCompletionResponseDto response = mapper.readValue(body, ChatCompletionResponseDto.class);
         log.info("json data response : {}", response);
 
         return response;
     }
-
     public List<ChatContent> getChatContent(ChatCompletionResponseDto chatCompletionResponseDto) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         List<ChatContent> chatContents = null;
         if(!chatCompletionResponseDto.getChoices().isEmpty()){
             String content = chatCompletionResponseDto.getChoices().get(0).getMessage().getContent();
             chatContents = mapper.readValue(content, new TypeReference<List<ChatContent>>(){});
-            System.out.println("Parsed ChatContent: " + chatContents);
         }
-        
        return chatContents;
     }
 
