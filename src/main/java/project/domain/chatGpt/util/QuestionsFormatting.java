@@ -42,7 +42,7 @@ public class QuestionsFormatting {
                         },]
                          
                          Example: [{
-                          "question": "Spring Framework의 핵심 기능은 무엇인가요?",
+                          "question": "What are the core features of Spring Framework?",
                           "options": [
                             "Dependency Injection",
                             "Aspect-Oriented Programming",
