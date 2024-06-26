@@ -90,7 +90,8 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         List<ChatContent> chatContents = null;
         if(!chatCompletionResponseDto.getChoices().isEmpty()){
             String content = chatCompletionResponseDto.getChoices().get(0).getMessage().getContent();
-            chatContents = mapper.readValue(content, new TypeReference<List<ChatContent>>(){});
+            String cleanedContent = content.replaceAll("(?m)^```json|```$", "").trim();
+            chatContents = mapper.readValue(cleanedContent, new TypeReference<List<ChatContent>>(){});
         }
        return chatContents;
     }
