@@ -37,11 +37,10 @@ public class QuestionsFormatting {
                             "Choice 1",
                             "Choice 2",
                             "Choice 3",
-                            "Choice 4",
-                            "Choice 5"
+                            "Choice 4"
                           ],
                           "answer": "Correct answer option number (0-4)",
-                          "quizType": "CHOICE_5"
+                          "quizType": "CHOICE_4"
                         },]
                          
                          Example: [{
@@ -50,11 +49,10 @@ public class QuestionsFormatting {
                             "Dependency Injection",
                             "Aspect-Oriented Programming",
                             "Spring Boot",
-                            "Spring Cloud",
-                            "Modularization"
+                            "Spring Cloud"
                           ],
                           "answer": 0,
-                          "quizType": "CHOICE_5"
+                          "quizType": "CHOICE_4"
                         },]
                         """;
 
@@ -67,7 +65,7 @@ public class QuestionsFormatting {
     }
 
     public static String getQuestionPart3(QuizType quizType){
-        if (quizType == QuizType.CHOICE_5){
+        if (quizType == QuizType.CHOICE_4){
             return choiceType;
         }else{
             return oxType;
