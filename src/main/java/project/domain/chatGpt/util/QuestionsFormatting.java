@@ -5,7 +5,10 @@ import project.domain.chatGpt.model.enums.QuizType;
 
 public class QuestionsFormatting {
     public static final String oxType = """
-            I would like each question to be provided in JSON format. The JSON structure should look like this: [{
+            Generate a simple OX quiz based on the following statement:
+            Please provide the statement, options 'O' for true and 'X' for false, and the correct answer.
+            I would like each question to be provided in JSON format.
+             The JSON structure should look like this: [{
                            "question": "Question content",
                            "options": [
                                "O",
@@ -25,7 +28,7 @@ public class QuestionsFormatting {
                            "answer": "O",
                            "quizType": "OX"
                        },]
-                       The options value must be "O" or "X"
+                       
                        """;
     public static final String choiceType = """
              I would like each question to be provided in JSON format. The JSON structure should look like this: [{

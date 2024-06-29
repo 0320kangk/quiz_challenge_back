@@ -5,8 +5,6 @@ import project.domain.chatGpt.model.dto.QuestionRequestDto;
 public class ChatGptUtil {
 
     //우선 클래스를 받아서 가공해야 함
-
-
     public static String[] createSystemQuestion(QuestionRequestDto questionRequestDto) {
 
         String[] questions = new String[3];
