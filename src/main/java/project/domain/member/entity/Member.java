@@ -3,8 +3,8 @@ package project.domain.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import project.domain.chat.chatMessage.ChatMessage;
-import project.domain.chat.chatRoom.ChatRoom;
+import project.domain.chat.chatMessage.model.domain.ChatMessage;
+import project.domain.chat.chatRoom.model.domain.ChatRoom;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -37,12 +37,6 @@ public class Member {
 
     @Column(nullable = false)
     LocalDateTime createdDate;
-
-    @OneToMany(mappedBy = "sender")
-    List<ChatMessage> chatMessages;
-
-    @OneToMany(mappedBy = "host")
-    List<ChatRoom> chatRooms;
 
     @ManyToMany
     @JoinTable(
