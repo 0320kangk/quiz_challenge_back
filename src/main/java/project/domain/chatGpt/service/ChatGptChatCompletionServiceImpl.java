@@ -28,7 +28,6 @@ import java.util.Random;
 public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionService {
 
     private final ChatGptProperties chatGptProperties;
-
     private final RestTemplate restTemplate;
     private final QuizQuestionsRepository quizQuestionsRepository;
     private final QuizTitleRepository quizTitleRepository;
