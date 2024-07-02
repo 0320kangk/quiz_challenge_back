@@ -9,9 +9,9 @@ import project.domain.member.entity.Member;
 @Setter
 public class ChatRoomDto {
 
-    private String name;
-
+    private Long memberId;
+    private String roomName;
     private Integer questionCount;
+    private String topic;
 
-//    private Member host;
 }
