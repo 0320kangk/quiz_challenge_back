@@ -2,11 +2,13 @@ package project.domain.gameRoom.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import project.domain.chatGpt.model.enums.QuizTitleEnum;
 
 @Getter
 @Setter
-public class GameRoomDto {
+@ToString
+public class GameRoomRequestDto {
     private String emailId;
     private String roomName;
     private Integer questionCount;

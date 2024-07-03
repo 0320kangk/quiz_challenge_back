@@ -1,26 +1,23 @@
-package project.domain.gameRoom.model.domain;
+package project.domain.gameRoom.model.dto;
 
 import lombok.Builder;
-import project.domain.gameRoom.model.enumerate.GameRoomStatus;
-
 import lombok.Getter;
 import lombok.Setter;
-
+import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 
 @Getter
 @Setter
 @Builder
-public class GameRoom {
-
+public class GameRoomResponseDto {
     private Long id;
 
     private String name;
 
     private Integer questionCount;
 
-    private GameRoomStatus status;
-
     private Integer people;
 
-    private String hostEmail;
+    private GameRoomStatus status;
+
+
 }

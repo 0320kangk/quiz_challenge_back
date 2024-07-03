@@ -17,10 +17,9 @@ public class ChatMessageController {
     public void enter(@Payload ChatMessageDto message) {
         message.setMessage(message.getWriter() +  "님이 채팅방에 참여하였습니다.");
         messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId(), message);
-
     }
     @MessageMapping(value = "/chat/message")
     public void message( ChatMessageDto message ) {
-        messageTemplate.convertAndSend("/publish/chat/room/" + message.getRoomId() , message);
+        messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId() , message);
     }
 }

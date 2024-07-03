@@ -6,6 +6,8 @@ public class UrlConst  {
             "/api/auth/login",
             "/api/chatGpt/completion",
             "/api/chatGpt/chat/completion",
-            "/api/chatGpt/chat/completion/content"
+            "/api/chatGpt/chat/completion/content",
+            "/api/gameRoom/create",
+            "/api/gameRoom/enter/{roomId}"
     };
 }

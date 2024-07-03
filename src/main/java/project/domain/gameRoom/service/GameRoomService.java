@@ -2,9 +2,10 @@ package project.domain.gameRoom.service;
 
 import org.springframework.stereotype.Service;
 import project.domain.gameRoom.model.domain.GameRoom;
-import project.domain.gameRoom.model.dto.GameRoomDto;
+import project.domain.gameRoom.model.dto.GameRoomRequestDto;
+import project.domain.gameRoom.model.dto.GameRoomResponseDto;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
-
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,17 +27,39 @@ public class GameRoomService {
 
     방번호 : 방
      */
-    public GameRoom createGameRoom(GameRoomDto gameRoomDto) {
+    public void createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
         GameRoom gameRoom = GameRoom.builder()
                 .id(++roomKey)
-                .name(gameRoomDto.getRoomName())
-                .questionCount(gameRoomDto.getQuestionCount())
+                .name(gameRoomRequestDto.getRoomName())
+                .questionCount(gameRoomRequestDto.getQuestionCount())
+                .people(1)
                 .status(GameRoomStatus.WAITING)
-                .hostEmail(gameRoomDto.getEmailId())
+                .hostEmail(gameRoomRequestDto.getEmailId())
                 .build();
-        if(!gameRoomMap.containsKey(roomKey)){
-           return gameRoom;
+        if(gameRoomMap.containsKey(roomKey)){
+            throw new IllegalArgumentException("방 생성 에러, roomId가 겹칩니다.");
         }
-        throw new IllegalArgumentException("방 생성 에러, roomId가 겹칩니다.");
     }
+    public List<GameRoomResponseDto> getGameRoomResponseDtos(){
+        List<GameRoomResponseDto> gameRoomResponseDtos = gameRoomMap.values()
+                .stream().map((gameRoom ->
+                        GameRoomResponseDto.builder()
+                                .id(gameRoom.getId())
+                                .name(gameRoom.getName())
+                                .questionCount(gameRoom.getQuestionCount())
+                                .people(gameRoom.getPeople())
+                                .status(gameRoom.getStatus())
+                                .build()))
+                .toList();
+        return gameRoomResponseDtos;
+    }
+    public void enterGameRoom(Long roomId){
+        GameRoom gameRoom = gameRoomMap.get(roomId);
+        if(gameRoom.getPeople() < 4){
+            gameRoom.setPeople(gameRoom.getPeople() + 1);
+        }else {
+            throw new IllegalStateException("방 인원수가 꽉차있습니다.");
+        }
+    }
+
 }
