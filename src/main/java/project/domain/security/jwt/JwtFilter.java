@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -32,7 +33,7 @@ public class JwtFilter extends GenericFilterBean {
         String requestURI = httpServletRequest.getRequestURI();
         log.info("requestURI: " + requestURI);
         // 특정 경로에 대해 필터링 제외
-        if (Arrays.stream(UrlConst.publicAPI).anyMatch(requestURI::startsWith)) {
+        if (Arrays.stream(UrlConst.publicAPI).anyMatch(pattern -> new AntPathMatcher().match(pattern, requestURI))) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

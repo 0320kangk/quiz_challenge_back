@@ -31,7 +31,8 @@ public class GameRoomController {
     }
 
     @PostMapping("/api/gameRoom/enter/{roomId}")
-    public ResponseEntity<String> enterGameRoom(@PathVariable Long roomId) {
+    public ResponseEntity<String> enterGameRoom(@PathVariable("roomId") Long roomId) {
+        log.info("enterGameRoom 호출 roomId {}", roomId);
         try {
             gameRoomService.enterGameRoom(roomId);
             return ResponseEntity.ok().body("방에 입장합니다.");

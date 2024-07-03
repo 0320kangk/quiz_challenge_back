@@ -36,7 +36,8 @@ public class GameRoomService {
                 .status(GameRoomStatus.WAITING)
                 .hostEmail(gameRoomRequestDto.getEmailId())
                 .build();
-        if(gameRoomMap.containsKey(roomKey)){
+        if(!gameRoomMap.containsKey(roomKey)){
+            gameRoomMap.put(gameRoom.getId(), gameRoom);
             throw new IllegalArgumentException("방 생성 에러, roomId가 겹칩니다.");
         }
     }
