@@ -3,12 +3,9 @@ package project.domain.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import project.domain.chat.chatMessage.model.domain.ChatMessage;
-import project.domain.chat.chatRoom.model.domain.ChatRoom;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity

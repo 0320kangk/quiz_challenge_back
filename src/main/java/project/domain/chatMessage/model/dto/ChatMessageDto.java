@@ -1,4 +1,4 @@
-package project.domain.chat.chatMessage.model.dto;
+package project.domain.chatMessage.model.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

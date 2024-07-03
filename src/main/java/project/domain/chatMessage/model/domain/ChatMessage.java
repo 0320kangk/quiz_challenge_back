@@ -1,6 +1,6 @@
-package project.domain.chat.chatMessage.model.domain;
+package project.domain.chatMessage.model.domain;
 
-import project.domain.chat.chatRoom.model.domain.ChatRoom;
+import project.domain.gameRoom.model.domain.GameRoom;
 import project.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +20,6 @@ public class ChatMessage {
 
     Member sender;
 
-    ChatRoom chatRoom;
+    GameRoom gameRoom;
 
 }

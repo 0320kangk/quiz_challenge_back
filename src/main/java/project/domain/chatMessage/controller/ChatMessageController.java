@@ -1,11 +1,11 @@
-package project.domain.chat.chatMessage.controller;
+package project.domain.chatMessage.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import project.domain.chat.chatMessage.model.dto.ChatMessageDto;
+import project.domain.chatMessage.model.dto.ChatMessageDto;
 
 
 @Controller
