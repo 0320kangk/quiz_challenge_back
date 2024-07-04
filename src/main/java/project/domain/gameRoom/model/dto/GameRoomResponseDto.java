@@ -13,9 +13,11 @@ public class GameRoomResponseDto {
 
     private String name;
 
+    private String title;
+
     private Integer questionCount;
 
-    private Integer people;
+    private Integer peopleCount;
 
     private GameRoomStatus status;
 

@@ -2,11 +2,15 @@ package project.domain.gameRoom.service;
 
 import org.springframework.stereotype.Service;
 import project.domain.gameRoom.model.domain.GameRoom;
+import project.domain.gameRoom.model.dto.GameRoomIdDto;
 import project.domain.gameRoom.model.dto.GameRoomRequestDto;
 import project.domain.gameRoom.model.dto.GameRoomResponseDto;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -27,19 +31,23 @@ public class GameRoomService {
 
     방번호 : 방
      */
-    public void createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
+    public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
+        HashSet<String> set = new HashSet<>();
+        set.add(gameRoomRequestDto.getEmail());
         GameRoom gameRoom = GameRoom.builder()
                 .id(++roomKey)
                 .name(gameRoomRequestDto.getRoomName())
+                .title(gameRoomRequestDto.getTitle())
                 .questionCount(gameRoomRequestDto.getQuestionCount())
-                .people(1)
+                .participants(set)
                 .status(GameRoomStatus.WAITING)
-                .hostEmail(gameRoomRequestDto.getEmailId())
+                .hostEmail(gameRoomRequestDto.getEmail())
                 .build();
         if(!gameRoomMap.containsKey(roomKey)){
             gameRoomMap.put(gameRoom.getId(), gameRoom);
-            throw new IllegalArgumentException("방 생성 에러, roomId가 겹칩니다.");
+            return new GameRoomIdDto (gameRoom.getId());
         }
+        throw new IllegalArgumentException("방 생성 에러, roomId가 겹칩니다.");
     }
     public List<GameRoomResponseDto> getGameRoomResponseDtos(){
         List<GameRoomResponseDto> gameRoomResponseDtos = gameRoomMap.values()
@@ -47,19 +55,26 @@ public class GameRoomService {
                         GameRoomResponseDto.builder()
                                 .id(gameRoom.getId())
                                 .name(gameRoom.getName())
+                                .title(gameRoom.getTitle().getValue())
+                                .peopleCount(gameRoom.getParticipants().size())
                                 .questionCount(gameRoom.getQuestionCount())
-                                .people(gameRoom.getPeople())
                                 .status(gameRoom.getStatus())
                                 .build()))
                 .toList();
         return gameRoomResponseDtos;
     }
-    public void enterGameRoom(Long roomId){
+    public void enterGameRoom(Long roomId, String email){
+        for (GameRoom room : gameRoomMap.values()) {
+            if(room.getParticipants().contains(email)){
+                throw new IllegalStateException("이미 방에 입장했습니다.");
+            }
+        }
         GameRoom gameRoom = gameRoomMap.get(roomId);
-        if(gameRoom.getPeople() < 4){
-            gameRoom.setPeople(gameRoom.getPeople() + 1);
-        }else {
-            throw new IllegalStateException("방 인원수가 꽉차있습니다.");
+        Set<String> participants = gameRoom.getParticipants();
+        if(participants.size() < 4){
+            participants.add(email);
+        } else {
+            throw new IllegalStateException("방이 꽉차있습니다.");
         }
     }
 

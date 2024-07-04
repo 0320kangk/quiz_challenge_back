@@ -12,7 +12,6 @@ import project.domain.chatMessage.model.dto.ChatMessageDto;
 @RequiredArgsConstructor
 public class ChatMessageController {
     private final SimpMessagingTemplate messageTemplate;
-
     @MessageMapping(value = "/chat/enter")
     public void enter(@Payload ChatMessageDto message) {
         message.setMessage(message.getWriter() +  "님이 채팅방에 참여하였습니다.");
