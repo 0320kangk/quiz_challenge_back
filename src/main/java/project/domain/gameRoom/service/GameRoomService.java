@@ -7,10 +7,7 @@ import project.domain.gameRoom.model.dto.GameRoomRequestDto;
 import project.domain.gameRoom.model.dto.GameRoomResponseDto;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,7 +30,7 @@ public class GameRoomService {
     방번호 : 방
      */
     public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto, String email) {
-        HashSet<String> set = new HashSet<>();
+        Set<String> set= Collections.synchronizedSet(new HashSet<>());
         GameRoom gameRoom = GameRoom.builder()
                 .id(roomKey.incrementAndGet())
                 .name(gameRoomRequestDto.getRoomName())
@@ -41,7 +38,7 @@ public class GameRoomService {
                 .questionCount(gameRoomRequestDto.getQuestionCount())
                 .participants(set)
                 .status(GameRoomStatus.WAITING)
-                .hostEmail(email)
+                .hostEmail(null)
                 .build();
 
         gameRoomMap.put(gameRoom.getId(), gameRoom);
@@ -67,7 +64,7 @@ public class GameRoomService {
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
         }
-        Set<String> participants = gameRoom.getParticipants();
+        Set<String> participants =  gameRoom.getParticipants();
         if (participants.contains(email)) {
             throw new IllegalStateException("이미 방에 입장한 사용자입니다.");
         }
@@ -76,6 +73,9 @@ public class GameRoomService {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
         participants.add(email);
+        if(participants.size() == 1) {
+            gameRoom.setHostEmail(email);
+        }
     }
 
 }
