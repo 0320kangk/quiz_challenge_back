@@ -9,7 +9,6 @@ import project.domain.chatGpt.model.enums.QuizTitleEnum;
 @Setter
 @ToString
 public class GameRoomRequestDto {
-    private String email;
     private String roomName;
     private Integer questionCount;
     private QuizTitleEnum title;

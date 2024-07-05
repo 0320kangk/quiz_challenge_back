@@ -36,7 +36,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
     private User createUser(String memberName, Member member) {
         log.info("creatUser test: ");
-
         if (!member.isActivated()) {
             log.info("활성화되어 있지 않습니다.");
             throw new RuntimeException(memberName + " -> 활성화되어 있지 않습니다.");

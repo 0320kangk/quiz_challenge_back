@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class GameRoomService {
@@ -21,7 +22,7 @@ public class GameRoomService {
     //key는 무엇? 방장의 id?.
     //
     private final Map<Long, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
-    private static long roomKey = 0L;
+    private static final AtomicLong roomKey = new AtomicLong(0L);
     //room을 만들
     /*
     방 리스트에서는
@@ -31,23 +32,21 @@ public class GameRoomService {
 
     방번호 : 방
      */
-    public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
+    public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto, String email) {
         HashSet<String> set = new HashSet<>();
-        set.add(gameRoomRequestDto.getEmail());
         GameRoom gameRoom = GameRoom.builder()
-                .id(++roomKey)
+                .id(roomKey.incrementAndGet())
                 .name(gameRoomRequestDto.getRoomName())
                 .title(gameRoomRequestDto.getTitle())
                 .questionCount(gameRoomRequestDto.getQuestionCount())
                 .participants(set)
                 .status(GameRoomStatus.WAITING)
-                .hostEmail(gameRoomRequestDto.getEmail())
+                .hostEmail(email)
                 .build();
-        if(!gameRoomMap.containsKey(roomKey)){
-            gameRoomMap.put(gameRoom.getId(), gameRoom);
-            return new GameRoomIdDto (gameRoom.getId());
-        }
-        throw new IllegalArgumentException("방 생성 에러, roomId가 겹칩니다.");
+
+        gameRoomMap.put(gameRoom.getId(), gameRoom);
+        return new GameRoomIdDto (gameRoom.getId());
+
     }
     public List<GameRoomResponseDto> getGameRoomResponseDtos(){
         List<GameRoomResponseDto> gameRoomResponseDtos = gameRoomMap.values()
@@ -64,18 +63,19 @@ public class GameRoomService {
         return gameRoomResponseDtos;
     }
     public void enterGameRoom(Long roomId, String email){
-        for (GameRoom room : gameRoomMap.values()) {
-            if(room.getParticipants().contains(email)){
-                throw new IllegalStateException("이미 방에 입장했습니다.");
-            }
-        }
         GameRoom gameRoom = gameRoomMap.get(roomId);
-        Set<String> participants = gameRoom.getParticipants();
-        if(participants.size() < 4){
-            participants.add(email);
-        } else {
-            throw new IllegalStateException("방이 꽉차있습니다.");
+        if (gameRoom == null) {
+            throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
         }
+        Set<String> participants = gameRoom.getParticipants();
+        if (participants.contains(email)) {
+            throw new IllegalStateException("이미 방에 입장한 사용자입니다.");
+        }
+
+        if (participants.size() >= 4) {
+            throw new IllegalStateException("방이 꽉 찼습니다.");
+        }
+        participants.add(email);
     }
 
 }

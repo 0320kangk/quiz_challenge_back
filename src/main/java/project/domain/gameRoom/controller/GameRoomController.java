@@ -3,6 +3,8 @@ package project.domain.gameRoom.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import project.domain.gameRoom.model.dto.GameRoomIdDto;
 import project.domain.gameRoom.model.dto.GameRoomRequestDto;
@@ -17,10 +19,11 @@ import java.util.List;
 public class GameRoomController {
     private final GameRoomService gameRoomService;
     @PostMapping("/api/gameRoom/create")
-    public ResponseEntity<?> createGameRoom(@RequestBody GameRoomRequestDto gameRoomRequestDto) {
+    public ResponseEntity<?> createGameRoom(@RequestBody GameRoomRequestDto gameRoomRequestDto,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
         log.info("gameRoom create request: {}", gameRoomRequestDto);
         try {
-            GameRoomIdDto gameRoom = gameRoomService.createGameRoom(gameRoomRequestDto);
+            GameRoomIdDto gameRoom = gameRoomService.createGameRoom(gameRoomRequestDto, userDetails.getUsername());
             return ResponseEntity.ok().body(gameRoom);
         } catch (IllegalArgumentException e){
             log.info(e.getMessage());
@@ -37,7 +40,7 @@ public class GameRoomController {
         log.info("enterGameRoom 호출 roomId {}", roomId);
         try {
             gameRoomService.enterGameRoom(roomId, email);
-            return ResponseEntity.ok().body("방에 입장합니다.");
+            return ResponseEntity.ok().body("방 입장 성공.");
         } catch (IllegalStateException e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
