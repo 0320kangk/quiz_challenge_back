@@ -34,7 +34,6 @@ public class GameRoomController {
     public List<GameRoomResponseDto> getGameRooms(){
         return gameRoomService.getGameRoomResponseDtos();
     }
-
     @PostMapping("/api/gameRoom/enter/{roomId}")
     public ResponseEntity<String> enterGameRoom(@PathVariable("roomId") Long roomId,@RequestBody String email) {
         log.info("enterGameRoom 호출 roomId {}", roomId);
