@@ -17,7 +17,7 @@ import project.domain.security.jwt.TokenProvider;
 
 import java.util.Objects;
 
-@Component
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtChannelInterceptor implements ChannelInterceptor {
@@ -42,6 +42,6 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                 throw new IllegalArgumentException("유효한 JWT 토큰이 없습니다.");
             }
         }
-        return ChannelInterceptor.super.preSend(message, channel);
+        return message;
     }
 }
