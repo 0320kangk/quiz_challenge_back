@@ -26,9 +26,12 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        log.info("test socket connect");
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
         if(StompCommand.CONNECT.equals(Objects.requireNonNull(accessor).getCommand())){
             String jwt = accessor.getFirstNativeHeader("Authorization");
+            log.info("jwt : " ,jwt);
             if (StringUtils.hasText(jwt) && jwt.startsWith("Bearer ")) {
                 jwt = jwt.substring(7);
             }

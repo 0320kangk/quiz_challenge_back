@@ -12,13 +12,13 @@ import project.domain.chatMessage.model.dto.ChatMessageDto;
 @RequiredArgsConstructor
 public class ChatMessageController {
     private final SimpMessagingTemplate messageTemplate;
-    @MessageMapping(value = "/chat/enter")
+    @MessageMapping(value = "/chat/room/enter")
     public void enter(@Payload ChatMessageDto message) {
         message.setMessage(message.getWriter() +  "님이 채팅방에 참여하였습니다.");
         messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId(), message);
     }
-    @MessageMapping(value = "/chat/message")
-    public void message( ChatMessageDto message ) {
+    @MessageMapping(value = "/chat/room/message")
+    public void message(@Payload ChatMessageDto message ) {
         messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId() , message);
     }
 }

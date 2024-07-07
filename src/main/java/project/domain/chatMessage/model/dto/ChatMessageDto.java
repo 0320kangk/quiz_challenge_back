@@ -21,11 +21,7 @@ public class ChatMessageDto {
     private String writer;
 
     @NotNull
-    private Long writerId;
-
-    @NotNull
     private String message;
-
 
     /*
     Responst (서버 -> 클라이언트) 로 전달할 때에는 @JsonFormat 을 사용,

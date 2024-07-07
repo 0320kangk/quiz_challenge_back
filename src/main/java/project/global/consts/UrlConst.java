@@ -9,6 +9,7 @@ public class UrlConst  {
             "/api/chatGpt/chat/completion/content",
 //            "/api/gameRoom/create",
             "/api/gameRoom/enter/{roomId}",
-            "/api/gameRoom/all"
+            "/api/gameRoom/all",
+            "/chat/**"
     };
 }
