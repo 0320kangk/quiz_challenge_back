@@ -1,4 +1,4 @@
-package project.domain.security.jwt.interceptor;
+package project.domain.gameRoom.interceptor;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;

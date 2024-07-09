@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GameRoomIdDto {
-    Long roomId;
+    String roomId;
 }

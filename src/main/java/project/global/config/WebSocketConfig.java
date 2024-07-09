@@ -8,7 +8,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import project.domain.security.jwt.TokenProvider;
-import project.domain.security.jwt.interceptor.JwtChannelInterceptor;
+import project.domain.gameRoom.interceptor.JwtChannelInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker

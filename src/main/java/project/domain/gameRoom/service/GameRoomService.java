@@ -18,8 +18,7 @@ public class GameRoomService {
     //key : room
     //key는 무엇? 방장의 id?.
     //
-    private final Map<Long, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
-    private static final AtomicLong roomKey = new AtomicLong(0L);
+    private final Map<String, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
     //room을 만들
     /*
     방 리스트에서는
@@ -29,16 +28,17 @@ public class GameRoomService {
 
     방번호 : 방
      */
-    public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto, String email) {
+    public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
+        String roomId = UUID.randomUUID().toString();
         Set<String> set= Collections.synchronizedSet(new HashSet<>());
         GameRoom gameRoom = GameRoom.builder()
-                .id(roomKey.incrementAndGet())
+                .id(roomId)
                 .name(gameRoomRequestDto.getRoomName())
                 .title(gameRoomRequestDto.getTitle())
                 .questionCount(gameRoomRequestDto.getQuestionCount())
                 .participants(set)
                 .status(GameRoomStatus.WAITING)
-                .hostEmail(null)
+                .hostId(null)
                 .build();
 
         gameRoomMap.put(gameRoom.getId(), gameRoom);
@@ -59,22 +59,22 @@ public class GameRoomService {
                 .toList();
         return gameRoomResponseDtos;
     }
-    public void enterGameRoom(Long roomId, String email){
+    public void addGameRoom(Long roomId, String sessionId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
         }
-        Set<String> participants =  gameRoom.getParticipants();
-        if (participants.contains(email)) {
+        Set<String> participants = gameRoom.getParticipants();
+        if (participants.contains(sessionId)) {
             throw new IllegalStateException("이미 방에 입장한 사용자입니다.");
         }
 
         if (participants.size() >= 4) {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
-        participants.add(email);
+        participants.add(sessionId);
         if(participants.size() == 1) {
-            gameRoom.setHostEmail(email);
+            gameRoom.setHostId(sessionId);
         }
     }
 

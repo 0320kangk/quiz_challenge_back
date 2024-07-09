@@ -9,7 +9,7 @@ import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 @Setter
 @Builder
 public class GameRoomResponseDto {
-    private Long id;
+    private String id;
 
     private String name;
 

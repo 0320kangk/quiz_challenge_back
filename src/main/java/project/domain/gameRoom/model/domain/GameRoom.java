@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder
 public class GameRoom {
 
-    private Long id;
+    private String id;
     private String name;
     private QuizTitleEnum title;
 
@@ -26,5 +26,5 @@ public class GameRoom {
 
     private Set<String> participants;
 
-    private String hostEmail;
+    private String hostId;
 }
