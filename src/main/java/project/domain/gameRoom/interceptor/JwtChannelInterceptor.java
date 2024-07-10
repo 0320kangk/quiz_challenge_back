@@ -1,6 +1,5 @@
 package project.domain.gameRoom.interceptor;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -11,7 +10,6 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import project.domain.security.jwt.TokenProvider;
 
@@ -31,7 +29,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
         if(StompCommand.CONNECT.equals(Objects.requireNonNull(accessor).getCommand())){
             String jwt = accessor.getFirstNativeHeader("Authorization");
-            log.info("jwt : " ,jwt);
+            log.info("jwt : {}" ,jwt);
             if (StringUtils.hasText(jwt) && jwt.startsWith("Bearer ")) {
                 jwt = jwt.substring(7);
             }

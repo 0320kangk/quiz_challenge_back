@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class ChatMessageDto {
 
     @NotNull
-    private Long roomId;
+    private String roomId;
 
     @NotNull
     private String writer;

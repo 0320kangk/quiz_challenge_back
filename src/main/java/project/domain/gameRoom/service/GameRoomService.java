@@ -13,21 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class GameRoomService {
-    //게임방을 어떻게 찾지?,
-    //게임 방 번호와 나
-    //key : room
-    //key는 무엇? 방장의 id?.
-    //
     private final Map<String, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
-    //room을 만들
-    /*
-    방 리스트에서는
-    모든 방을 출력해줄꺼야,
-    들어갔어
-    메시지는 roomid와 작성자를 통해 보낼꺼야
-
-    방번호 : 방
-     */
+    private final Map<String, String> sessionRoomMap = new ConcurrentHashMap<>();
+    private final Integer maxRoomPeople = 4;
     public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
         String roomId = UUID.randomUUID().toString();
         Set<String> set= Collections.synchronizedSet(new HashSet<>());
@@ -59,7 +47,7 @@ public class GameRoomService {
                 .toList();
         return gameRoomResponseDtos;
     }
-    public void addGameRoom(Long roomId, String sessionId){
+    public void addGameRoom(String roomId, String sessionId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
@@ -69,13 +57,37 @@ public class GameRoomService {
             throw new IllegalStateException("이미 방에 입장한 사용자입니다.");
         }
 
-        if (participants.size() >= 4) {
+        if (participants.size() >= maxRoomPeople) {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
         participants.add(sessionId);
+        sessionRoomMap.put(sessionId, roomId);
         if(participants.size() == 1) {
             gameRoom.setHostId(sessionId);
         }
+    }
+    public void leaveGameRoom(String roomId, String sessionId){
+        if(gameRoomMap.containsKey(roomId)){
+            GameRoom gameRoom = gameRoomMap.get(roomId);
+            Set<String> participants = gameRoom.getParticipants();
+            boolean remove = participants.remove(sessionId);
+            if(remove && gameRoom.getHostId().equals(sessionId)&& !participants.isEmpty()){
+                gameRoom.setHostId(participants.stream().findFirst().get()); //방장 변경
+            }
+            if(!remove){
+                throw new NoSuchElementException("방에 존재하지 않는 회원입니다.");
+            }
+            if(participants.isEmpty()){
+                gameRoomMap.remove(roomId); // 사람이 없다면 방 삭제
+            }
+        }
+    }
+
+    public String getRoomId(String sessionId) {
+        return sessionRoomMap.get(sessionId);
+    }
+    public void setRoomId(String sessionId, String roomId) {
+        sessionRoomMap.put(sessionId,roomId);
     }
 
 }
