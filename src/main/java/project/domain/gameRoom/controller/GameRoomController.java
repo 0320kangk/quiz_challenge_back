@@ -31,7 +31,8 @@ public class GameRoomController {
     }
     @GetMapping("/api/gameRoom/all")
     public List<GameRoomResponseDto> getGameRooms(){
-        return gameRoomService.getGameRoomResponseDtos();
+
+        return gameRoomService.getGameRoomResponseDtos(); 
     }
 
 }

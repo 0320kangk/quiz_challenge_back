@@ -44,7 +44,7 @@ public class GameRoomService {
                                 .questionCount(gameRoom.getQuestionCount())
                                 .status(gameRoom.getStatus())
                                 .build()))
-                .toList();
+                                .toList();
         return gameRoomResponseDtos;
     }
     public void addGameRoom(String roomId, String sessionId){
@@ -61,7 +61,7 @@ public class GameRoomService {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
         participants.add(sessionId);
-        sessionRoomMap.put(sessionId, roomId);
+        setRoomId (sessionId, roomId);
         if(participants.size() == 1) {
             gameRoom.setHostId(sessionId);
         }
@@ -79,6 +79,7 @@ public class GameRoomService {
             }
             if(participants.isEmpty()){
                 gameRoomMap.remove(roomId); // 사람이 없다면 방 삭제
+                sessionRoomMap.remove(sessionId);
             }
         }
     }
