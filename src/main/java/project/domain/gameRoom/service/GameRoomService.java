@@ -13,7 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class GameRoomService {
+    //key : uuid, value: gameRoom
     private final Map<String, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
+    //key: sessionId, value:
     private final Map<String, String> sessionRoomMap = new ConcurrentHashMap<>();
     private final Integer maxRoomPeople = 4;
     public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
