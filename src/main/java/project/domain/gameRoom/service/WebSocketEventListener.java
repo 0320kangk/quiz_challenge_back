@@ -35,7 +35,6 @@ public class WebSocketEventListener {
     }
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        log.info("disconnect test: ");
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         String roomId = gameRoomService.getRoomId(sessionId);

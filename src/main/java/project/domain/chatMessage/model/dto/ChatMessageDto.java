@@ -28,5 +28,4 @@ public class ChatMessageDto {
     Responst (서버 -> 클라이언트) 로 전달할 때에는 @JsonFormat 을 사용,
     Request(클라이언트 -> 서버)로 전달할 때는 @DateTimeFormat 을 사용한다.
      */
-
 }

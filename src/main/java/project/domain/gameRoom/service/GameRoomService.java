@@ -1,10 +1,13 @@
 package project.domain.gameRoom.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import project.domain.chatGpt.model.dto.QuestionRequestDto;
 import project.domain.gameRoom.model.domain.GameRoom;
 import project.domain.gameRoom.model.dto.GameRoomIdDto;
 import project.domain.gameRoom.model.dto.GameRoomRequestDto;
 import project.domain.gameRoom.model.dto.GameRoomResponseDto;
+import project.domain.gameRoom.model.dto.GameRoomSimpleResponseDto;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 
 import java.util.*;
@@ -12,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
+@Slf4j
 public class GameRoomService {
     //key : uuid, value: gameRoom
     private final Map<String, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
@@ -28,6 +32,7 @@ public class GameRoomService {
                 .questionCount(gameRoomRequestDto.getQuestionCount())
                 .participants(set)
                 .status(GameRoomStatus.WAITING)
+                .quizLevel(gameRoomRequestDto.getQuizLevel())
                 .hostId(null)
                 .build();
 
@@ -92,5 +97,23 @@ public class GameRoomService {
     public void setRoomId(String sessionId, String roomId) {
         sessionRoomMap.put(sessionId,roomId);
     }
-
+    public GameRoomSimpleResponseDto getGameRoomSimpleResponseDto (String roomId) {
+        GameRoom gameRoom = gameRoomMap.get(roomId);
+        return GameRoomSimpleResponseDto.builder()
+                .title(gameRoom.getTitle())
+                .name(gameRoom.getName())
+                .questionCount(gameRoom.getQuestionCount())
+                .quizLevel(gameRoom.getQuizLevel())
+                .build();
+    }
+    public QuestionRequestDto getQuestionRequestDto (String roomId) {
+        log.info("gameRoomMap {}", gameRoomMap);
+        GameRoom gameRoom = gameRoomMap.get(roomId);
+        log.info("gameRoom test: {}", gameRoom);
+        return QuestionRequestDto.builder()
+                .title(gameRoom.getTitle().getValue())
+                .count(gameRoom.getQuestionCount())
+                .quizLevel(gameRoom.getQuizLevel())
+                .build();
+    }
 }

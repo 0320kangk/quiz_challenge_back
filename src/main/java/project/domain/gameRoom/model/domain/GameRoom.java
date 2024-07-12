@@ -1,6 +1,9 @@
 package project.domain.gameRoom.model.domain;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+import lombok.ToString;
+import project.domain.chatGpt.model.enums.QuizLevel;
 import project.domain.chatGpt.model.enums.QuizTitleEnum;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 
@@ -13,6 +16,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 @Builder
 public class GameRoom {
 
@@ -27,4 +31,5 @@ public class GameRoom {
     private Set<String> participants;
 
     private String hostId;
+    private QuizLevel quizLevel;
 }

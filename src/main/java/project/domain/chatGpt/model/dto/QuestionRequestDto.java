@@ -7,6 +7,7 @@ import project.domain.chatGpt.model.enums.QuizType;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionRequestDto {

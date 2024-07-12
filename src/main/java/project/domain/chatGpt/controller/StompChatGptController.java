@@ -1,43 +1,42 @@
 package project.domain.chatGpt.controller;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
 import project.domain.chatGpt.model.dto.ChatContent;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
-import project.domain.chatGpt.service.ChatGptChatCompletionServiceImpl;
+import project.domain.chatGpt.service.ChatGptChatCompletionService;
+import project.domain.gameRoom.model.dto.GameRoomSimpleResponseDto;
+import project.domain.gameRoom.service.GameRoomService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/chatGpt")
+@Controller
 @RequiredArgsConstructor
 @Slf4j
-public class ChatGptController {
-
-//    private final ChatGptCompletionServiceImpl chatGptServiceImpl;
-    private final ChatGptChatCompletionServiceImpl chatGptChatCompletionServiceImpl;
+public class StompChatGptController {
+    
+    private final ChatGptChatCompletionService chatGptChatCompletionServiceImpl;
+    private final GameRoomService gameRoomService;
+    private final SimpMessagingTemplate messageTemplate;
     private static final int MAX_RETRIES = 3; // 최대 재요청 횟수
+    @MessageMapping(value = "/api/chat/room/quiz")
+    public void publishChatCompletionContent(@Payload String roomId) throws JsonProcessingException {
+        //문제를 요청해야함
+        //QuestionRequestDto
+        //roomid를 통해 room데이터 얻기
+        log.info("roomId {}", roomId);
+        QuestionRequestDto questionRequestDto = gameRoomService.getQuestionRequestDto(roomId);
+        chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
 
-    @PostMapping("/chat/completion")
-    public ChatCompletionResponseDto getChatCompletion(@RequestBody QuestionRequestDto questionRequestDto) throws JsonProcessingException {
-        return chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
-    }
-    @PostMapping("/chat/completion/content")
-    public ResponseEntity<?> getChatCompletionContent(@RequestBody @Validated QuestionRequestDto questionRequestDto)  {
         int retries = 0;
         List<ChatContent> chatContent = new ArrayList<>();
         while( chatContent.size() != questionRequestDto.getCount() && retries < MAX_RETRIES  ){
@@ -54,11 +53,14 @@ public class ChatGptController {
         log.info("chatContents : {} ", chatContent);
         if(chatContent.size() != questionRequestDto.getCount() ) {
             String errorMessage = String.format("문제를 생성을 위해 %d 시도 했지만 실패했습니다.", MAX_RETRIES);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+            log.info(" {}",errorMessage);
+            return;
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
-        return ResponseEntity.ok(chatContent);
+//        return ResponseEntity.ok(chatContent);
+
+        
+        messageTemplate.convertAndSend("/subscribe/quiz/room/" + roomId , chatContent);
     }
-
-
 
 }
