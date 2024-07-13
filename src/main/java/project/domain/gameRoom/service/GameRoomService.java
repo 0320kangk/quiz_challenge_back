@@ -9,6 +9,7 @@ import project.domain.gameRoom.model.dto.GameRoomRequestDto;
 import project.domain.gameRoom.model.dto.GameRoomResponseDto;
 import project.domain.gameRoom.model.dto.GameRoomSimpleResponseDto;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
+import project.domain.security.jwt.util.SecurityUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,7 +55,7 @@ public class GameRoomService {
                                 .toList();
         return gameRoomResponseDtos;
     }
-    public void addGameRoom(String roomId, String sessionId){
+    public GameRoom addGameRoom(String roomId, String sessionId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
@@ -70,15 +71,19 @@ public class GameRoomService {
         participants.add(sessionId);
         setRoomId (sessionId, roomId);
         if(participants.size() == 1) {
-            gameRoom.setHostId(sessionId);
+            String hostId = SecurityUtil.getCurrentUsername().orElseThrow(() -> new NoSuchElementException("회원 id를 찾을 수 없습니다."));
+            log.info("host ID {} ",hostId);
+            gameRoom.setHostId(hostId);
         }
+        return gameRoom;
     }
-    public void leaveGameRoom(String roomId, String sessionId){
+    public GameRoom leaveGameRoom(String roomId, String sessionId){
         if(gameRoomMap.containsKey(roomId)){
             GameRoom gameRoom = gameRoomMap.get(roomId);
             Set<String> participants = gameRoom.getParticipants();
             boolean remove = participants.remove(sessionId);
-            if(remove && gameRoom.getHostId().equals(sessionId)&& !participants.isEmpty()){
+            String userName = SecurityUtil.getCurrentUsername().orElseThrow(() -> new NoSuchElementException("회원 id를 찾을 수 없습니다."));
+            if(remove && gameRoom.getHostId().equals(userName)&& !participants.isEmpty()){
                 gameRoom.setHostId(participants.stream().findFirst().get()); //방장 변경
             }
             if(!remove){
@@ -88,7 +93,9 @@ public class GameRoomService {
                 gameRoomMap.remove(roomId); // 사람이 없다면 방 삭제
                 sessionRoomMap.remove(sessionId);
             }
+            return gameRoom;
         }
+        throw new IllegalArgumentException("존재하지 않는 roomId 입니다.");
     }
 
     public String getRoomId(String sessionId) {
