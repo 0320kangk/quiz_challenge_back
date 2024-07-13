@@ -26,4 +26,5 @@ public class ChatMessageController {
     public void message(@Payload ChatMessageDto message ) {
         messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId() , message);
     }
+
 }

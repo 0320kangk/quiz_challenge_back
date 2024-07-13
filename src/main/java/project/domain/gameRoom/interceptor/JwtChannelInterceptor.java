@@ -35,9 +35,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
             }
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Authentication authentication = tokenProvider.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
                 accessor.setUser(authentication);
-                log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), accessor.getDestination());
             } else {
                 log.info("유효한 JWT 토큰이 없습니다, uri: {}", accessor.getDestination());
                 throw new IllegalArgumentException("유효한 JWT 토큰이 없습니다.");

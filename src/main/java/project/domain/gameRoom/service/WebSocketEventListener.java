@@ -9,7 +9,9 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.messaging.support.NativeMessageHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -30,29 +32,39 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        MessageHeaderAccessor accessor = NativeMessageHeaderAccessor.getAccessor(event.getMessage(), SimpMessageHeaderAccessor.class);
-        GenericMessage generic = (GenericMessage) accessor.getHeader("simpConnectMessage");
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        Authentication authentication = (Authentication) headerAccessor.getUser();
+        UserDetails userDetails;
+        if (authentication != null) {
+            userDetails = (UserDetails) authentication.getPrincipal();
+            log.info("authentication userDetails: {}", userDetails.getUsername());
+        } else {
+            throw new NoSuchElementException("user 정보가 없습니다.");
+        }
+
+        GenericMessage generic = (GenericMessage) headerAccessor.getHeader("simpConnectMessage");
         Map<String, List<String>> nativeHeaders = (Map) generic.getHeaders().get("nativeHeaders");
         log.info("nativeHeaders data {}", nativeHeaders);
-        String roomId =  nativeHeaders.get("roomId").get(0);
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String roomId;
+        if(!nativeHeaders.get("roomId").isEmpty()){
+            roomId = nativeHeaders.get("roomId").get(0);
+        } else {
+            throw new NoSuchElementException("방 번호를 찾지 못 했습니다.");
+        }
         String sessionId = headerAccessor.getSessionId();
-        GameRoom gameRoom = gameRoomService.addGameRoom(roomId, sessionId);
-        log.info("test sessionId : {}", sessionId); // 방안의 사용자 웹소켓 id
-        log.info("test roomId : {}", roomId);  // 방 아이디
-        String userName = SecurityUtil.getCurrentUsername().orElseThrow(() -> new NoSuchElementException("user Principal 이 없습니다."));
-        log.info("test user name {}", userName);
+        gameRoomService.addGameRoom(roomId,sessionId, userDetails.getUsername());
+
     }
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
+        String hostId = event.getUser().getName();
+        log.info("userName {}", hostId);
         String roomId = gameRoomService.getRoomId(sessionId);
-        GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, sessionId);
+        GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, sessionId, hostId);
         GameRoomHostIdDto gameRoomHostIdDto = new GameRoomHostIdDto(gameRoom.getHostId());
         log.info("[Disconnected] websocket session id : {}", sessionId);
-
         messagingTemplate.convertAndSend("/subscribe/notification/room/"+ roomId ,gameRoomHostIdDto); //방장이 누군지 알려야 함
-
     }
 }

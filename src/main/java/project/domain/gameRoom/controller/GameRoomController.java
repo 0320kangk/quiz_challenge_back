@@ -33,7 +33,8 @@ public class GameRoomController {
     }
     @GetMapping("/api/gameRoom/all")
     public List<GameRoomResponseDto> getGameRooms(){
-        return gameRoomService.getGameRoomResponseDtos(); 
+        gameRoomService.cleanGameRoom();
+        return gameRoomService.getGameRoomResponseDtos();
     }
     @GetMapping("/api/gameRoom/{roomId}")
     public ResponseEntity<GameRoomSimpleResponseDto> getGameRoom(@PathVariable("roomId") String roomId) {

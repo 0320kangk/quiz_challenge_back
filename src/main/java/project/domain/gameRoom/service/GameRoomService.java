@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class GameRoomService {
     //key : uuid, value: gameRoom
     private final Map<String, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
-    //key: sessionId, value:
+    //key: sessionId, value: roomid
     private final Map<String, String> sessionRoomMap = new ConcurrentHashMap<>();
     private final Integer maxRoomPeople = 4;
     public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
@@ -55,7 +55,15 @@ public class GameRoomService {
                                 .toList();
         return gameRoomResponseDtos;
     }
-    public GameRoom addGameRoom(String roomId, String sessionId){
+    //방 인원수가 없다면 방 제거
+    public void cleanGameRoom() {
+        for (Map.Entry<String, GameRoom> stringGameRoomEntry : gameRoomMap.entrySet()) {
+            if(stringGameRoomEntry.getValue().getParticipants().isEmpty()){
+                gameRoomMap.remove(stringGameRoomEntry.getKey());
+            }
+        }
+    }
+    public GameRoom addGameRoom(String roomId, String sessionId, String hostId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
@@ -70,23 +78,22 @@ public class GameRoomService {
         }
         participants.add(sessionId);
         setRoomId (sessionId, roomId);
+        log.info("participants size {}", participants.size());
         if(participants.size() == 1) {
-            String hostId = SecurityUtil.getCurrentUsername().orElseThrow(() -> new NoSuchElementException("회원 id를 찾을 수 없습니다."));
             log.info("host ID {} ",hostId);
             gameRoom.setHostId(hostId);
         }
         return gameRoom;
     }
-    public GameRoom leaveGameRoom(String roomId, String sessionId){
+    public GameRoom leaveGameRoom(String roomId, String sessionId, String hostId){
         if(gameRoomMap.containsKey(roomId)){
             GameRoom gameRoom = gameRoomMap.get(roomId);
             Set<String> participants = gameRoom.getParticipants();
-            boolean remove = participants.remove(sessionId);
-            String userName = SecurityUtil.getCurrentUsername().orElseThrow(() -> new NoSuchElementException("회원 id를 찾을 수 없습니다."));
-            if(remove && gameRoom.getHostId().equals(userName)&& !participants.isEmpty()){
+            boolean leaveParticipant = participants.remove(sessionId);
+            if(leaveParticipant && gameRoom.getHostId().equals(hostId) && !participants.isEmpty()){
                 gameRoom.setHostId(participants.stream().findFirst().get()); //방장 변경
             }
-            if(!remove){
+            if(!leaveParticipant){
                 throw new NoSuchElementException("방에 존재하지 않는 회원입니다.");
             }
             if(participants.isEmpty()){
