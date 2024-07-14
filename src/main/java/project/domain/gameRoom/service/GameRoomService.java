@@ -104,6 +104,12 @@ public class GameRoomService {
         }
         throw new IllegalArgumentException("존재하지 않는 roomId 입니다.");
     }
+    public String getHostId(String roomId){
+        if(gameRoomMap.get(roomId) != null) {
+            return gameRoomMap.get(roomId).getHostId();
+        }
+        throw new IllegalArgumentException("잘못된 roomId 입니다.");
+    }
 
     public String getRoomId(String sessionId) {
         return sessionRoomMap.get(sessionId);
