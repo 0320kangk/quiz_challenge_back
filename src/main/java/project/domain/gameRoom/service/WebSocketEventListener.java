@@ -51,20 +51,17 @@ public class WebSocketEventListener {
         } else {
             throw new NoSuchElementException("방 번호를 찾지 못 했습니다.");
         }
-        String sessionId = headerAccessor.getSessionId();
-        gameRoomService.addGameRoom(roomId,sessionId, userDetails.getUsername());
-
+        gameRoomService.addGameRoom(roomId, userDetails.getUsername());
     }
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headerAccessor.getSessionId();
         String hostId = event.getUser().getName();
         log.info("userName {}", hostId);
-        String roomId = gameRoomService.getRoomId(sessionId);
-        GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, sessionId, hostId);
+        String roomId = gameRoomService.getRoomId(hostId);
+        GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, hostId);
         GameRoomHostIdDto gameRoomHostIdDto = new GameRoomHostIdDto(gameRoom.getHostId());
-        log.info("[Disconnected] websocket session id : {}", sessionId);
+        log.info("[Disconnected] websocket host id : {}", hostId);
         messagingTemplate.convertAndSend("/subscribe/notification/room/"+ roomId ,gameRoomHostIdDto); //방장이 누군지 알려야 함
     }
 }

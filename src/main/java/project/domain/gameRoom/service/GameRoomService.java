@@ -9,11 +9,9 @@ import project.domain.gameRoom.model.dto.GameRoomRequestDto;
 import project.domain.gameRoom.model.dto.GameRoomResponseDto;
 import project.domain.gameRoom.model.dto.GameRoomSimpleResponseDto;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
-import project.domain.security.jwt.util.SecurityUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @Slf4j
@@ -63,34 +61,34 @@ public class GameRoomService {
             }
         }
     }
-    public GameRoom addGameRoom(String roomId, String sessionId, String hostId){
+    public GameRoom addGameRoom(String roomId,  String participantId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
         }
         Set<String> participants = gameRoom.getParticipants();
-        if (participants.contains(sessionId)) {
+        if (participants.contains(participantId)) {
             throw new IllegalStateException("이미 방에 입장한 사용자입니다.");
         }
 
         if (participants.size() >= maxRoomPeople) {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
-        participants.add(sessionId);
-        setRoomId (sessionId, roomId);
+        participants.add(participantId);
+        setRoomId (participantId, roomId);
         log.info("participants size {}", participants.size());
         if(participants.size() == 1) {
-            log.info("host ID {} ",hostId);
-            gameRoom.setHostId(hostId);
+            log.info("host ID {} ",participantId);
+            gameRoom.setHostId(participantId);
         }
         return gameRoom;
     }
-    public GameRoom leaveGameRoom(String roomId, String sessionId, String hostId){
+    public GameRoom leaveGameRoom(String roomId, String participantId){
         if(gameRoomMap.containsKey(roomId)){
             GameRoom gameRoom = gameRoomMap.get(roomId);
             Set<String> participants = gameRoom.getParticipants();
-            boolean leaveParticipant = participants.remove(sessionId);
-            if(leaveParticipant && gameRoom.getHostId().equals(hostId) && !participants.isEmpty()){
+            boolean leaveParticipant = participants.remove(participantId);
+            if(leaveParticipant && gameRoom.getHostId().equals(participantId) && !participants.isEmpty()){
                 gameRoom.setHostId(participants.stream().findFirst().get()); //방장 변경
             }
             if(!leaveParticipant){
@@ -98,7 +96,7 @@ public class GameRoomService {
             }
             if(participants.isEmpty()){
                 gameRoomMap.remove(roomId); // 사람이 없다면 방 삭제
-                sessionRoomMap.remove(sessionId);
+                sessionRoomMap.remove(participantId);
             }
             return gameRoom;
         }

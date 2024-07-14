@@ -23,13 +23,9 @@ public class GameRoom {
     private String id;
     private String name;
     private QuizTitleEnum title;
-
     private Integer questionCount;
-
     private GameRoomStatus status;
-
     private Set<String> participants;
-
     private String hostId;
     private QuizLevel quizLevel;
 }
