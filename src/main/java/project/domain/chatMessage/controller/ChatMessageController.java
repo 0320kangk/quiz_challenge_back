@@ -12,10 +12,7 @@ import project.domain.chatGpt.model.dto.ChatContent;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
 import project.domain.chatGpt.model.enums.QuizType;
 import project.domain.chatGpt.service.ChatGptChatCompletionService;
-import project.domain.chatMessage.model.dto.ChatEnterMessageDto;
-import project.domain.chatMessage.model.dto.ChatMessageDto;
-import project.domain.chatMessage.model.dto.ChatQuizRequestDto;
-import project.domain.chatMessage.model.dto.ChatRoomStatusDto;
+import project.domain.chatMessage.model.dto.*;
 import project.domain.gameRoom.model.dto.GameRoomHostIdDto;
 import project.domain.gameRoom.service.GameRoomService;
 
@@ -54,6 +51,12 @@ public class ChatMessageController {
         messageTemplate.convertAndSend("/subscribe/status/room/" + message.getRoomId() , message);
     }
 
+    @MessageMapping(value = "/chat/room/score")
+    public void message(@Payload ChatRoomUserScoreDto message) {
+        log.info("publish room status {}", message);
+        messageTemplate.convertAndSend("/subscribe/score/room/" + message.getRoomId() , message);
+    }
+
     @MessageMapping(value = "/chat/room/quiz")
     public void publishChatCompletionContent(@Payload ChatQuizRequestDto chatQuizRequestDto) throws JsonProcessingException {
         //문제를 요청해야함
@@ -87,6 +90,4 @@ public class ChatMessageController {
 //        return ResponseEntity.ok(chatContent);
         messageTemplate.convertAndSend("/subscribe/quiz/room/" + chatQuizRequestDto.getRoomId() , chatContent);
     }
-
-
 }
