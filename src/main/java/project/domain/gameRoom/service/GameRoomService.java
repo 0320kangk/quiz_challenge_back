@@ -3,6 +3,7 @@ package project.domain.gameRoom.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
+import project.domain.chatGpt.model.enums.QuizType;
 import project.domain.gameRoom.model.domain.GameRoom;
 import project.domain.gameRoom.model.dto.GameRoomIdDto;
 import project.domain.gameRoom.model.dto.GameRoomRequestDto;
@@ -61,7 +62,7 @@ public class GameRoomService {
             }
         }
     }
-    public GameRoom addGameRoom(String roomId,  String participantId){
+    public GameRoom enterGameRoom(String roomId,  String participantId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
@@ -124,14 +125,15 @@ public class GameRoomService {
                 .quizLevel(gameRoom.getQuizLevel())
                 .build();
     }
-    public QuestionRequestDto getQuestionRequestDto (String roomId) {
+    public QuestionRequestDto getQuestionRequestDto (String roomId, QuizType quizType) {
         log.info("gameRoomMap {}", gameRoomMap);
         GameRoom gameRoom = gameRoomMap.get(roomId);
         log.info("gameRoom test: {}", gameRoom);
         return QuestionRequestDto.builder()
                 .title(gameRoom.getTitle().getValue())
-                .count(gameRoom.getQuestionCount())
+                .count(gameRoom.getQuestionCount() / 2)
                 .quizLevel(gameRoom.getQuizLevel())
+                .quizType(quizType)
                 .build();
     }
 }

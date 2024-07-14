@@ -51,11 +51,11 @@ public class WebSocketEventListener {
         } else {
             throw new NoSuchElementException("방 번호를 찾지 못 했습니다.");
         }
-        gameRoomService.addGameRoom(roomId, userDetails.getUsername());
+        gameRoomService.enterGameRoom(roomId, userDetails.getUsername());
     }
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+//        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String hostId = event.getUser().getName();
         log.info("userName {}", hostId);
         String roomId = gameRoomService.getRoomId(hostId);
