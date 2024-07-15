@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatRoomUserScoreDto {
-    String roomId;
-    String userName;
+    String name;
     Integer score;
 }

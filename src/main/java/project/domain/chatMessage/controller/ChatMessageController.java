@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
 import project.domain.chatGpt.model.dto.ChatContent;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
@@ -37,8 +38,6 @@ public class ChatMessageController {
                 .participateNames(gameRoomService.getAllRoomParticipant(roomId))
                 .hostName(gameRoomService.getHostName(roomId))
                 .build();
-
-
         messageTemplate.convertAndSend("/subscribe/enter/room/" + message.getRoomId() , message);
 
     }
@@ -53,10 +52,11 @@ public class ChatMessageController {
         messageTemplate.convertAndSend("/subscribe/status/room/" + message.getRoomId() , message);
     }
 
-    @MessageMapping(value = "/chat/room/score")
-    public void message(@Payload ChatRoomUserScoreDto message) {
+    @MessageMapping(value = "/chat/room/score/{roomId}")
+    public void message(@PathVariable("roomId") String roomId,
+            @Payload ChatRoomUserScoreDto message) {
         log.info("publish room status {}", message);
-        messageTemplate.convertAndSend("/subscribe/score/room/" + message.getRoomId() , message);
+        messageTemplate.convertAndSend("/subscribe/score/room/" + roomId , message);
     }
 
     @MessageMapping(value = "/chat/room/quiz")
