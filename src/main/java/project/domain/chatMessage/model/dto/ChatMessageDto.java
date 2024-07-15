@@ -22,7 +22,7 @@ public class ChatMessageDto {
     @NotNull
     private String writer;
 
-    private String message;
+    private String content;
 
     /*
     Responst (서버 -> 클라이언트) 로 전달할 때에는 @JsonFormat 을 사용,

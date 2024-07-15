@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GameRoomHostIdDto {
-    String hostId;
+public class GameRoomHostNameDto {
+    String hostName;
 }

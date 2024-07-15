@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import project.domain.gameRoom.model.domain.GameRoom;
-import project.domain.gameRoom.model.dto.GameRoomHostIdDto;
-import project.domain.security.jwt.util.SecurityUtil;
+import project.domain.gameRoom.model.dto.GameRoomHostNameDto;
 
 import java.util.List;
 import java.util.Map;
@@ -56,12 +55,12 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
 //        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String hostId = event.getUser().getName();
-        log.info("userName {}", hostId);
-        String roomId = gameRoomService.getRoomId(hostId);
-        GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, hostId);
-        GameRoomHostIdDto gameRoomHostIdDto = new GameRoomHostIdDto(gameRoom.getHostId());
-        log.info("[Disconnected] websocket host id : {}", hostId);
-        messagingTemplate.convertAndSend("/subscribe/notification/room/"+ roomId ,gameRoomHostIdDto); //방장이 누군지 알려야 함
+        String id = event.getUser().getName();
+        log.info("userEmail {}", id);
+        String roomId = gameRoomService.getIdToRoomId(id);
+        GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, id);
+        GameRoomHostNameDto gameRoomHostNameDto = new GameRoomHostNameDto(gameRoom.getHostName());
+        log.info("[Disconnected] websocket host name : {}", gameRoomHostNameDto.getHostName());
+        messagingTemplate.convertAndSend("/subscribe/notification/room/"+ roomId ,gameRoomHostNameDto.getHostName()); //방장이 누군지 알려야 함
     }
 }

@@ -26,6 +26,6 @@ public class GameRoom {
     private Integer questionCount;
     private GameRoomStatus status;
     private Set<String> participants;
-    private String hostId;
+    private String hostName;
     private QuizLevel quizLevel;
 }

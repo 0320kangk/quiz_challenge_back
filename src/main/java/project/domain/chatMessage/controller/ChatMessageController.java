@@ -10,10 +10,8 @@ import org.springframework.stereotype.Controller;
 import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
 import project.domain.chatGpt.model.dto.ChatContent;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
-import project.domain.chatGpt.model.enums.QuizType;
 import project.domain.chatGpt.service.ChatGptChatCompletionService;
 import project.domain.chatMessage.model.dto.*;
-import project.domain.gameRoom.model.dto.GameRoomHostIdDto;
 import project.domain.gameRoom.service.GameRoomService;
 
 import java.util.ArrayList;
@@ -29,15 +27,19 @@ public class ChatMessageController {
     private final ChatGptChatCompletionService chatGptChatCompletionServiceImpl;
     private static final int MAX_RETRIES = 3; // 최대 재요청 횟수    @MessageMapping(value = "/chat/room/quiz")
     @MessageMapping(value = "/chat/room/enter")
-    public void enter(@Payload ChatEnterMessageDto enterMessage) {
-        ChatMessageDto message = ChatMessageDto.builder()
-                .roomId(enterMessage.getRoomId())
+    public void enter(@Payload ChatEnterRequestMessageDto enterMessage) {
+
+        String roomId = enterMessage.getRoomId();
+        ChatEnterResponseMessageDto message = ChatEnterResponseMessageDto.builder()
+                .roomId(roomId)
                 .writer(enterMessage.getWriter())
-                .message(enterMessage.getWriter() + "님이 채팅방에 참여하였습니다.")
+                .content(enterMessage.getWriter() + "님이 채팅방에 참여하였습니다.")
+                .participateNames(gameRoomService.getAllRoomParticipant(roomId))
+                .hostName(gameRoomService.getHostName(roomId))
                 .build();
-        messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId(), message);
-        GameRoomHostIdDto gameRoomHostIdDto = new GameRoomHostIdDto(gameRoomService.getHostId(message.getRoomId()));
-        messageTemplate.convertAndSend("/subscribe/notification/room/" + message.getRoomId() ,gameRoomHostIdDto);
+
+
+        messageTemplate.convertAndSend("/subscribe/enter/room/" + message.getRoomId() , message);
 
     }
     @MessageMapping(value = "/chat/room/message")
