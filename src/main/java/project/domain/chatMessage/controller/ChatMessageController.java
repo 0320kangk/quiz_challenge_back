@@ -3,6 +3,7 @@ package project.domain.chatMessage.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -53,9 +54,10 @@ public class ChatMessageController {
     }
 
     @MessageMapping(value = "/chat/room/score/{roomId}")
-    public void message(@PathVariable("roomId") String roomId,
+    public void message(@DestinationVariable("roomId") String roomId,
             @Payload ChatRoomUserScoreDto message) {
         log.info("publish room status {}", message);
+        log.info("room Id {}", roomId);
         messageTemplate.convertAndSend("/subscribe/score/room/" + roomId , message);
     }
 
