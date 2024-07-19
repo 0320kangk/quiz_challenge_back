@@ -41,8 +41,4 @@ public class GameRoomController {
         return ResponseEntity.ok().body(gameRoomService.getGameRoomSimpleResponseDto(roomId));
     }
 
-    //그냥 id만 통해서 한번에 찾고 문제 만들면 되는거 아님?
-    //
-
-
 }

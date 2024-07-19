@@ -7,6 +7,5 @@ import project.domain.chatGpt.model.enums.QuizType;
 @Getter
 @Setter
 public class ChatQuizRequestDto {
-    String roomId;
     QuizType quizType;
 }

@@ -14,4 +14,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findOneWithAuthoritiesByEmail (String email);
     @Query("SELECT m.name FROM Member m WHERE m.email = :email")
     Optional<String> findNameByEmail(@Param("email") String email);
+
+    Optional<Member> findOneByEmail (String email);
+
+    @Query("SELECT m.characterImg.imgName FROM Member m WHERE m.email = :email")
+    Optional<String> findOneCharacterImgNameByEmail(@Param("email") String email);
+
 }

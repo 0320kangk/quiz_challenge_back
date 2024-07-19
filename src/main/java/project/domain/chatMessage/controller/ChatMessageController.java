@@ -28,10 +28,11 @@ public class ChatMessageController {
     private final GameRoomService gameRoomService;
     private final ChatGptChatCompletionService chatGptChatCompletionServiceImpl;
     private static final int MAX_RETRIES = 3; // 최대 재요청 횟수    @MessageMapping(value = "/chat/room/quiz")
-    @MessageMapping(value = "/chat/room/enter")
-    public void enter(@Payload ChatEnterRequestMessageDto enterMessage) {
+    @MessageMapping(value = "/chat/room/enter/{roomId}")
+    public void enter(
+            @DestinationVariable("roomId")  String roomId,
+            @Payload ChatEnterRequestMessageDto enterMessage) {
 
-        String roomId = enterMessage.getRoomId();
         ChatEnterResponseMessageDto message = ChatEnterResponseMessageDto.builder()
                 .roomId(roomId)
                 .writer(enterMessage.getWriter())
@@ -40,34 +41,48 @@ public class ChatMessageController {
                 .hostName(gameRoomService.getHostName(roomId))
                 .build();
         messageTemplate.convertAndSend("/subscribe/enter/room/" + message.getRoomId() , message);
-
     }
-    @MessageMapping(value = "/chat/room/message")
-    public void message(@Payload ChatMessageDto message ) {
-        messageTemplate.convertAndSend("/subscribe/chat/room/" + message.getRoomId() , message);
+    @MessageMapping(value = "/chat/room/message/{roomId}")
+    public void message(
+            @DestinationVariable("roomId") String roomId,
+            @Payload ChatMessageDto message ) {
+        messageTemplate.convertAndSend("/subscribe/chat/room/" + roomId, message);
     }
-
-    @MessageMapping(value = "/chat/room/status")
-    public void message(@Payload ChatRoomStatusDto message) {
+    @MessageMapping(value = "/chat/room/status/{roomId}")
+    public void statusMessage(
+            @DestinationVariable("roomId") String roomId,
+            @Payload ChatRoomStatusDto message) {
         log.info("publish room status {}", message);
-        messageTemplate.convertAndSend("/subscribe/status/room/" + message.getRoomId() , message);
+        messageTemplate.convertAndSend("/subscribe/status/room/" + roomId , message);
     }
-
+    @MessageMapping(value = "/chat/room/init/{roomId}")
+    public void initMessage(
+            @DestinationVariable("roomId") String roomId,
+            @Payload String writer) {
+        String initContent = "게임을 다시 시작합니다.";
+        ChatMessageDto chatMessageDto = ChatMessageDto.builder()
+                .writer(writer)
+                .content(initContent)
+                .build();
+        messageTemplate.convertAndSend("/subscribe/init/room/" + roomId, chatMessageDto);
+    }
     @MessageMapping(value = "/chat/room/score/{roomId}")
-    public void message(@DestinationVariable("roomId") String roomId,
+    public void scoreMessage(@DestinationVariable("roomId") String roomId,
             @Payload ChatRoomUserScoreDto message) {
         log.info("publish room status {}", message);
         log.info("room Id {}", roomId);
         messageTemplate.convertAndSend("/subscribe/score/room/" + roomId , message);
     }
 
-    @MessageMapping(value = "/chat/room/quiz")
-    public void publishChatCompletionContent(@Payload ChatQuizRequestDto chatQuizRequestDto) throws JsonProcessingException {
+    @MessageMapping(value = "/chat/room/quiz/{roomId}")
+    public void publishChatCompletionContent(
+            @DestinationVariable("roomId") String roomId,
+            @Payload ChatQuizRequestDto chatQuizRequestDto) throws JsonProcessingException {
         //문제를 요청해야함
         //QuestionRequestDto
         //roomid를 통해 room데이터 얻기
-        log.info("roomId {}", chatQuizRequestDto.getRoomId());
-        QuestionRequestDto questionRequestDto = gameRoomService.getQuestionRequestDto(chatQuizRequestDto.getRoomId(), chatQuizRequestDto.getQuizType());
+        log.info("roomId {}", roomId);
+        QuestionRequestDto questionRequestDto = gameRoomService.getQuestionRequestDto(roomId, chatQuizRequestDto.getQuizType());
 
         chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
 
@@ -92,6 +107,6 @@ public class ChatMessageController {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
 //        return ResponseEntity.ok(chatContent);
-        messageTemplate.convertAndSend("/subscribe/quiz/room/" + chatQuizRequestDto.getRoomId() , chatContent);
+        messageTemplate.convertAndSend("/subscribe/quiz/room/" + roomId , chatContent);
     }
 }

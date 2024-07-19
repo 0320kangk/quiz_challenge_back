@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.domain.characterImg.entity.CharacterImg;
+import project.domain.characterImg.repository.CharacterImgRepository;
 import project.domain.member.dto.JoinFormDto;
 import project.domain.member.entity.Authority;
 import project.domain.member.entity.Member;
@@ -20,6 +22,9 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CharacterImgRepository characterImgRepository;
+
+    @Transactional
     public void joinMember(JoinFormDto joinFormDto){
 
         // 가입되어 있지 않은 회원이면,
@@ -27,12 +32,14 @@ public class MemberService {
         Authority authority = Authority.builder()
                 .authorityName(Role.GUEST.getKey())
                 .build();
+        CharacterImg characterImg = characterImgRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("1번 캐릭터가 없습니다."));
 
         Member member = Member.builder()
                 .name(joinFormDto.getName())
                 .email(joinFormDto.getEmail())
                 .password(bCryptPasswordEncoder.encode(joinFormDto.getPasswordOrigin()))
                 .authorities(Collections.singleton(authority))
+                .characterImg(characterImg)
                 .activated(true)
                 .createdDate(LocalDateTime.now())
                 .build();

@@ -16,11 +16,10 @@ import java.time.LocalDateTime;
 @Builder
 public class ChatMessageDto {
 
-    @NotNull
-    private String roomId;
 
     @NotNull
     private String writer;
+
 
     private String content;
 

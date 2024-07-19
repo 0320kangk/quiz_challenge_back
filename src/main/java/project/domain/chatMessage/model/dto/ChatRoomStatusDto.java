@@ -8,7 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ChatRoomStatusDto {
-    String roomId;
     boolean loading;
     boolean gameStarted;
     boolean gameEnded;

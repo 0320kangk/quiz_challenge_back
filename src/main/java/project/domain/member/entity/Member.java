@@ -4,6 +4,7 @@ package project.domain.member.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import jakarta.persistence.*;
+import project.domain.characterImg.entity.CharacterImg;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -34,6 +35,10 @@ public class Member {
 
     @Column(nullable = false)
     LocalDateTime createdDate;
+
+    @OneToOne
+    @JoinColumn(name = "characterImg_id")
+    private CharacterImg characterImg;
 
     @ManyToMany
     @JoinTable(
