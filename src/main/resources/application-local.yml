@@ -8,4 +8,4 @@ spring:
     username: root #local, docker
     password: 1234 #local. docker
 
-character-img-path : C:/Users/82103/IdeaProjects/Spring/myProject/quiz_challenge_backend/characterImg/
+character-img-path : ${CHARACTER_IMG_PATH}

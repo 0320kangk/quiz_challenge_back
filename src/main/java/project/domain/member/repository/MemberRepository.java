@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import project.domain.member.entity.Member;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,5 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m.characterImg.imgName FROM Member m WHERE m.email = :email")
     Optional<String> findOneCharacterImgNameByEmail(@Param("email") String email);
+
 
 }

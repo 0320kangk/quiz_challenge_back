@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import project.domain.member.dto.JoinFormDto;
+import project.domain.member.dto.MyMemberInfoDto;
 import project.domain.member.entity.Member;
 import project.domain.member.service.MemberService;
 
@@ -28,15 +29,15 @@ public class MemberController {
     }
     @GetMapping("/member")
     @PreAuthorize("hasAnyRole('GUEST','ADMIN')")
-    public ResponseEntity<Member> getMyMemberInfo() {
-        return ResponseEntity.ok(memberService.getMyMemberWithAuthorities().get());
+    public ResponseEntity<MyMemberInfoDto> getMyMemberInfo() {
+        return ResponseEntity.ok(memberService.getMyMemberWithAuthorities());
     }
 
-    @GetMapping("/member/{memberName}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Member> getUserInfo(@PathVariable("memberName") String memberName) {
-        return ResponseEntity.ok(memberService.getMemberWithAuthorities(memberName).get());
-    }
+//    @GetMapping("/member/{memberName}")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    public ResponseEntity<Member> getUserInfo(@PathVariable("memberName") String memberName) {
+//        return ResponseEntity.ok(memberService.getMemberWithAuthorities(memberName).get());
+//    }
   /*  @GetMapping("/api/test")
     public String TEST() {
         log.info("test: test");

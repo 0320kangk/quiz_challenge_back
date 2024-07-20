@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.domain.characterImg.entity.CharacterImg;
 import project.domain.characterImg.repository.CharacterImgRepository;
 import project.domain.member.dto.JoinFormDto;
+import project.domain.member.dto.MyMemberInfoDto;
 import project.domain.member.entity.Authority;
 import project.domain.member.entity.Member;
 import project.domain.member.entity.enumerate.Role;
@@ -54,8 +55,18 @@ public class MemberService {
     }
     // 현재 securityContext에 저장된 username의 정보만 가져오는 메소드
     @Transactional(readOnly = true)
-    public Optional<Member> getMyMemberWithAuthorities() {
-        return SecurityUtil.getCurrentUsername()
-                .flatMap(memberRepository::findOneWithAuthoritiesByEmail);
+    public MyMemberInfoDto getMyMemberWithAuthorities() {
+        Member member = SecurityUtil.getCurrentUsername()
+                .flatMap(memberRepository::findOneWithAuthoritiesByEmail).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이름입니다."));
+
+        MyMemberInfoDto myMemberInfoDto = MyMemberInfoDto.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .email(member.getEmail())
+                .authorities(member.getAuthorities())
+                .createdDate(member.getCreatedDate())
+                .build();
+
+        return myMemberInfoDto;
     }
 }

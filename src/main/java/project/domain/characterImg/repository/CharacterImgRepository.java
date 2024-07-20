@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface CharacterImgRepository extends JpaRepository<CharacterImg,Long > {
     Optional<CharacterImg> findOneByImgName (String imgName);
 
+
 }

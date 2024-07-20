@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.domain.characterImg.dto.CharacterImgDto;
 import project.domain.characterImg.entity.CharacterImg;
 import project.domain.characterImg.repository.CharacterImgRepository;
 import project.domain.member.entity.Member;
 import project.domain.member.repository.MemberRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,4 +33,21 @@ public class CharacterImgService {
         return characterImgPath +  imgName;
     }
 
+    public List<CharacterImgDto> getAllCharacter(){
+        List<CharacterImg> allCharacterImg = characterImgRepository.findAll();
+        List<CharacterImgDto> characterImgDtos = allCharacterImg.stream()
+                .map((characterImg) -> {
+                    return CharacterImgDto.builder()
+                            .name(characterImg.getImgName())
+                            .build();
+                })
+                .toList();
+        return characterImgDtos;
+    }
+    public String getCharacterImgFullPathByImgName(String imgName){
+        if(characterImgRepository.findOneByImgName(imgName).isPresent()){
+            return characterImgPath + imgName;
+        }
+        throw new IllegalArgumentException("존재하지 않는 캐릭터입니다.");
+    }
 }

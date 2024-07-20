@@ -1,21 +1,20 @@
-package project.domain.member.entity;
-
+package project.domain.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import project.domain.characterImg.entity.CharacterImg;
+import project.domain.member.entity.Authority;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Entity
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class Member {
+public class MyMemberInfoDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,18 +26,9 @@ public class Member {
     @Column(unique = true)
     private String email;
 
-    @Column(nullable = true)
-    private String password;
-
-    @JsonIgnore
-    private boolean activated;
 
     @Column(nullable = false)
     LocalDateTime createdDate;
-
-    @ManyToOne
-    @JoinColumn(name = "characterImg_id")
-    private CharacterImg characterImg;
 
     @ManyToMany
     @JoinTable(
@@ -46,5 +36,4 @@ public class Member {
             joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
-
 }

@@ -11,6 +11,9 @@ public class UrlConst  {
             "/api/gameRoom/enter/{roomId}",
             "/api/gameRoom/all",
             "/chat/**",
-            "/quiz/**"
+            "/quiz/**",
+            "/api/characterImg/all",
+            "/api/characterImg/{characterImg}",
+
     };
 }

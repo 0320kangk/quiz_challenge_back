@@ -1,9 +1,15 @@
 package project.domain.characterImg.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import project.domain.member.entity.Member;
 
+import java.util.List;
+
 @Entity
+@Getter
+@Setter
 public class CharacterImg {
 
     @Id
@@ -12,6 +18,6 @@ public class CharacterImg {
 
     @Column(nullable = false)
     private String imgName;
-    @OneToOne(mappedBy = "characterImg")
-    private Member member;
+    @OneToMany(mappedBy = "characterImg")
+    private List<Member> members;
 }
