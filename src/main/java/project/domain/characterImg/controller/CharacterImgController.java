@@ -18,7 +18,7 @@ public class CharacterImgController {
     private final CharacterImgService characterImgService;
     //이미자 바꾸기
     @PostMapping("/api/characterImg/change/{characterName}")
-    public void characterImgChange(@PathVariable("characterName") String characterName, @AuthenticationPrincipal UserDetails userDetails) {
+    public void ChangeCharacterImg(@PathVariable("characterName") String characterName, @AuthenticationPrincipal UserDetails userDetails) {
         characterImgService.changeCharacterImg(userDetails.getUsername(),characterName);
     }
     @GetMapping("/api/characterImg")
@@ -42,5 +42,9 @@ public class CharacterImgController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
-
+    @PostMapping("/characterImg/select/{characterName}")
+    public  ResponseEntity<String> selectCharacterImg(@PathVariable("characterName") String characterName, @AuthenticationPrincipal UserDetails userDetails) {
+        characterImgService.updateMemberCharacterImg (userDetails.getUsername(),characterName);
+        return ResponseEntity.ok("캐릭터 선택 성공");
+    }
 }

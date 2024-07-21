@@ -11,6 +11,7 @@ import project.domain.member.entity.Member;
 import project.domain.member.repository.MemberRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +50,16 @@ public class CharacterImgService {
             return characterImgPath + imgName;
         }
         throw new IllegalArgumentException("존재하지 않는 캐릭터입니다.");
+    }
+
+    @Transactional
+    public void updateMemberCharacterImg(String email, String selectedCharacterImg){
+        Member member = memberRepository.findOneByEmail(email).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email입니다."));
+        Optional<CharacterImg> oneByImgName = characterImgRepository.findOneByImgName(selectedCharacterImg);
+        if(oneByImgName.isPresent()){
+            member.setCharacterImg(oneByImgName.get());
+        } else {
+            throw new IllegalArgumentException("존재하지 않는 캐릭터 이미지 이름입니다.");
+        }
     }
 }
