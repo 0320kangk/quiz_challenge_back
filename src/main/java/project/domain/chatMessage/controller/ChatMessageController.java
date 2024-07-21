@@ -37,7 +37,7 @@ public class ChatMessageController {
                 .roomId(roomId)
                 .writer(enterMessage.getWriter())
                 .content(enterMessage.getWriter() + "님이 채팅방에 참여하였습니다.")
-                .participateNames(gameRoomService.getAllRoomParticipant(roomId))
+                .participates(gameRoomService.getAllRoomParticipant(roomId))
                 .hostName(gameRoomService.getHostName(roomId))
                 .build();
         messageTemplate.convertAndSend("/subscribe/enter/room/" + message.getRoomId() , message);

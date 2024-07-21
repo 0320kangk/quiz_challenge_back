@@ -6,11 +6,9 @@ import org.springframework.stereotype.Service;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
 import project.domain.chatGpt.model.enums.QuizType;
 import project.domain.gameRoom.model.domain.GameRoom;
-import project.domain.gameRoom.model.dto.GameRoomIdDto;
-import project.domain.gameRoom.model.dto.GameRoomRequestDto;
-import project.domain.gameRoom.model.dto.GameRoomResponseDto;
-import project.domain.gameRoom.model.dto.GameRoomSimpleResponseDto;
+import project.domain.gameRoom.model.dto.*;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
+import project.domain.member.entity.Member;
 import project.domain.member.repository.MemberRepository;
 
 import java.util.*;
@@ -32,7 +30,7 @@ public class GameRoomService {
 
     public GameRoomIdDto createGameRoom(GameRoomRequestDto gameRoomRequestDto) {
         String roomId = UUID.randomUUID().toString();
-        Set<String> set= Collections.synchronizedSet(new HashSet<>());
+        Set<GameRoomParticipant> set= Collections.synchronizedSet(new HashSet<>());
         GameRoom gameRoom = GameRoom.builder()
                 .id(roomId)
                 .name(gameRoomRequestDto.getRoomName())
@@ -72,19 +70,24 @@ public class GameRoomService {
     }
     public GameRoom enterGameRoom(String roomId,  String participantId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
-        String name = memberRepository.findNameByEmail(participantId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email 입니다."));
+        Member member = memberRepository.findOneWithCharacterImgByEmail(participantId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email 입니다."));
+        String name = member.getName();
         log.info("name {}", name);
         if (gameRoom == null) {
             throw new IllegalArgumentException("해당 roomId에 해당하는 게임 방이 존재하지 않습니다.");
         }
-        Set<String> participants = gameRoom.getParticipants();
+        Set<GameRoomParticipant> participants = gameRoom.getParticipants();
         if (participants.contains(name)) {
             throw new IllegalStateException("이미 방에 입장한 사용자입니다.");
         }
         if (participants.size() >= maxRoomPeople) {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
-        participants.add(name);
+
+        participants.add(GameRoomParticipant.builder()
+                .name(name)
+                .characterName(member.getCharacterImg().getImgName())
+                .build());
         nameToRoomMap.put(name, roomId);
         idToNameMap.put(participantId, name);
         log.info("participants size {}", participants.size());
@@ -97,11 +100,11 @@ public class GameRoomService {
     public GameRoom leaveGameRoom(String roomId, String id){
         if(gameRoomMap.containsKey(roomId)){
             GameRoom gameRoom = gameRoomMap.get(roomId);
-            Set<String> participants = gameRoom.getParticipants();
+            Set<GameRoomParticipant> participants = gameRoom.getParticipants();
             String name = idToNameMap.get(id);
-            boolean leaveParticipant = participants.remove(name);
+            boolean leaveParticipant = participants.removeIf(participant -> name.equals(participant.getName()));
             if(leaveParticipant && gameRoom.getHostName().equals(name) && !participants.isEmpty()){
-                gameRoom.setHostName(participants.stream().findFirst().get()); //방장 변경
+                gameRoom.setHostName(participants.stream().findFirst().get().getName()); //방장 변경
             }
             if(!leaveParticipant){
                 throw new NoSuchElementException("방에 존재하지 않는 회원입니다.");
@@ -147,7 +150,7 @@ public class GameRoomService {
                 .quizType(quizType)
                 .build();
     }
-    public Set<String> getAllRoomParticipant(String roomId){
+    public Set<GameRoomParticipant> getAllRoomParticipant(String roomId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         return gameRoom.getParticipants();
     }

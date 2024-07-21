@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import project.domain.gameRoom.model.dto.GameRoomParticipant;
 
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,6 @@ public class ChatEnterResponseMessageDto {
     private String roomId;
     private String writer;
     private String content;
-    private Set<String> participateNames;
+    private Set<GameRoomParticipant> participates;
     private String hostName;
 }

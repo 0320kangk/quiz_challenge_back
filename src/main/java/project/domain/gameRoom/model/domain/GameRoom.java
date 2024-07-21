@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.ToString;
 import project.domain.chatGpt.model.enums.QuizLevel;
 import project.domain.chatGpt.model.enums.QuizTitleEnum;
+import project.domain.gameRoom.model.dto.GameRoomParticipant;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class GameRoom {
     private QuizTitleEnum title;
     private Integer questionCount;
     private GameRoomStatus status;
-    private Set<String> participants;
+    private Set<GameRoomParticipant> participants;
     private String hostName;
     private QuizLevel quizLevel;
 }
