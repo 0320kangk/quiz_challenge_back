@@ -22,7 +22,7 @@ public class GameRoomService {
     private final Map<String, GameRoom> gameRoomMap = new ConcurrentHashMap<>();
     //key: sessionId, value: roomid
     private final Map<String, String> nameToRoomMap = new ConcurrentHashMap<>();
-    private final Map<String, String> idToNameMap = new ConcurrentHashMap<>();
+    private final Map<String, String> idToNameMap = new ConcurrentHashMap<>();//email:name
     private final Integer maxRoomPeople = 4;
 
     private final MemberRepository memberRepository;
@@ -153,6 +153,10 @@ public class GameRoomService {
     public Set<GameRoomParticipant> getAllRoomParticipant(String roomId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         return gameRoom.getParticipants();
+    }
+    //방안의 회원 아이디를 통하여 회원 이름 찾기
+    public String getNameById(String id){
+        return idToNameMap.get(id);
     }
 
 }

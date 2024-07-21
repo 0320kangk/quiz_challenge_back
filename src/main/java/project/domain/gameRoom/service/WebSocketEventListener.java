@@ -3,20 +3,16 @@ package project.domain.gameRoom.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.messaging.support.MessageHeaderAccessor;
-import org.springframework.messaging.support.NativeMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import project.domain.gameRoom.model.domain.GameRoom;
-import project.domain.gameRoom.model.dto.GameRoomHostNameDto;
+import project.domain.gameRoom.model.dto.GameRoomDisconnectedResponseDto;
 
 import java.util.List;
 import java.util.Map;
@@ -59,8 +55,14 @@ public class WebSocketEventListener {
         log.info("userEmail {}", id);
         String roomId = gameRoomService.getIdToRoomId(id);
         GameRoom gameRoom = gameRoomService.leaveGameRoom(roomId, id);
-        GameRoomHostNameDto gameRoomHostNameDto = new GameRoomHostNameDto(gameRoom.getHostName());
-        log.info("[Disconnected] websocket host name : {}", gameRoomHostNameDto.getHostName());
-        messagingTemplate.convertAndSend("/subscribe/notification/room/"+ roomId ,gameRoomHostNameDto.getHostName()); //방장이 누군지 알려야 함
+        log.info("[Disconnected] websocket host name : {}", gameRoom .getHostName());
+        //호스트 네임하고, 현재 방의 참가자들의 데이터를 보내야함.
+        String nameById = gameRoomService.getNameById(id);
+        GameRoomDisconnectedResponseDto message = GameRoomDisconnectedResponseDto.builder()
+                .hostName(gameRoom.getHostName())
+                .leftPerson(nameById)
+                .content(nameById + "님이 방을 나갔습니다.")
+                .build();
+        messagingTemplate.convertAndSend("/subscribe/exit/room/"+ roomId , message); //방장이 누군지 알려야 함
     }
 }
