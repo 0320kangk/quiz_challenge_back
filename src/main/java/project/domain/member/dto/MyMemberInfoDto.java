@@ -26,6 +26,8 @@ public class MyMemberInfoDto {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String characterName;
 
     @Column(nullable = false)
     LocalDateTime createdDate;

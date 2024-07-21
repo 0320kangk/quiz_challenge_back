@@ -147,7 +147,6 @@ public class GameRoomService {
                 .quizType(quizType)
                 .build();
     }
-
     public Set<String> getAllRoomParticipant(String roomId){
         GameRoom gameRoom = gameRoomMap.get(roomId);
         return gameRoom.getParticipants();

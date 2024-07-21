@@ -51,18 +51,19 @@ public class MemberService {
     // 유저,권한 정보를 가져오는 메소드
     @Transactional(readOnly = true)
     public Optional<Member> getMemberWithAuthorities(String username) {
-        return memberRepository.findOneWithAuthoritiesByEmail(username);
+        return memberRepository.findOneWithAuthoritiesByEmail (username);
     }
     // 현재 securityContext에 저장된 username의 정보만 가져오는 메소드
     @Transactional(readOnly = true)
     public MyMemberInfoDto getMyMemberWithAuthorities() {
         Member member = SecurityUtil.getCurrentUsername()
-                .flatMap(memberRepository::findOneWithAuthoritiesByEmail).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이름입니다."));
+                .flatMap(memberRepository::findOneWithAuthoritiesAndCharacterImgByEmail).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이름입니다."));
 
         MyMemberInfoDto myMemberInfoDto = MyMemberInfoDto.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .email(member.getEmail())
+                .characterName(member.getCharacterImg().getImgName())
                 .authorities(member.getAuthorities())
                 .createdDate(member.getCreatedDate())
                 .build();
