@@ -1,17 +1,15 @@
 package project.domain.gameRoom.model.domain;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.ToString;
 import project.domain.chatGpt.model.enums.QuizLevel;
-import project.domain.chatGpt.model.enums.QuizTitleEnum;
+import project.domain.chatGpt.model.enums.QuizThemeEnum;
 import project.domain.gameRoom.model.dto.GameRoomParticipant;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 
@@ -23,7 +21,7 @@ public class GameRoom {
 
     private String id;
     private String name;
-    private QuizTitleEnum title;
+    private QuizThemeEnum theme;
     private Integer questionCount;
     private GameRoomStatus status;
     private Set<GameRoomParticipant> participants;

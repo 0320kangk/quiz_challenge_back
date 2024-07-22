@@ -9,12 +9,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuizTitle {
+public class QuizTheme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(nullable = false, unique = true)
-    String title;
+    String theme;
 
 }

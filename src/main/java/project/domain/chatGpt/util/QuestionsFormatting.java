@@ -60,8 +60,8 @@ public class QuestionsFormatting {
         return String.format("You need to create %s quiz questions. Answer all questions in Korean.", quizLevel);
     }
 
-    public static String getQuestionPart2(String title){
-        return String.format("about the %s.", title);
+    public static String getQuestionPart2(String theme){
+        return String.format("about the %s.", theme);
     }
 
     public static String getQuestionPart3(QuizType quizType){

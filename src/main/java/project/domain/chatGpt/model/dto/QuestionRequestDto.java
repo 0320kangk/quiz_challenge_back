@@ -13,7 +13,7 @@ import project.domain.chatGpt.model.enums.QuizType;
 @ToString
 public class QuestionRequestDto {
     @NotNull
-    String title;
+    String theme;
     @NotNull
     QuizLevel quizLevel;
     @NotNull

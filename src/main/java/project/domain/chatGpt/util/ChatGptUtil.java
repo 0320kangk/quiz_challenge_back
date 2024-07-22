@@ -9,7 +9,7 @@ public class ChatGptUtil {
 
         String[] questions = new String[3];
         questions[0] =  QuestionsFormatting.getQuestionPart1(questionRequestDto.getQuizLevel());
-        questions[1]  = QuestionsFormatting.getQuestionPart2(questionRequestDto.getTitle());
+        questions[1]  = QuestionsFormatting.getQuestionPart2(questionRequestDto.getTheme());
         questions[2] = QuestionsFormatting.getQuestionPart3(questionRequestDto.getQuizType());
 //        String content =
 //                """

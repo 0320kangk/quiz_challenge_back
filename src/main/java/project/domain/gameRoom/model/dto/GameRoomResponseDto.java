@@ -13,7 +13,7 @@ public class GameRoomResponseDto {
 
     private String name;
 
-    private String title;
+    private String theme;
 
     private Integer questionCount;
 

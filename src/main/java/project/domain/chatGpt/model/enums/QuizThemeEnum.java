@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum QuizTitleEnum {
+public enum QuizThemeEnum {
     SPRINGFRAMEWORK("Spring framework"),
     JAVA("Java");
 

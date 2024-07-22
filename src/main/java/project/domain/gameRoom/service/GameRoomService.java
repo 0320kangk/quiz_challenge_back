@@ -10,7 +10,6 @@ import project.domain.gameRoom.model.dto.*;
 import project.domain.gameRoom.model.enumerate.GameRoomStatus;
 import project.domain.member.entity.Member;
 import project.domain.member.repository.MemberRepository;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,7 +33,7 @@ public class GameRoomService {
         GameRoom gameRoom = GameRoom.builder()
                 .id(roomId)
                 .name(gameRoomRequestDto.getRoomName())
-                .title(gameRoomRequestDto.getTitle())
+                .theme(gameRoomRequestDto.getTheme())
                 .questionCount(gameRoomRequestDto.getQuestionCount())
                 .participants(set)
                 .status(GameRoomStatus.WAITING)
@@ -51,7 +50,7 @@ public class GameRoomService {
                         GameRoomResponseDto.builder()
                                 .id(gameRoom.getId())
                                 .name(gameRoom.getName())
-                                .title(gameRoom.getTitle().getValue())
+                                .theme(gameRoom.getTheme().getValue())
                                 .peopleCount(gameRoom.getParticipants().size())
                                 .questionCount(gameRoom.getQuestionCount())
                                 .status(gameRoom.getStatus())
@@ -133,7 +132,7 @@ public class GameRoomService {
     public GameRoomSimpleResponseDto getGameRoomSimpleResponseDto (String roomId) {
         GameRoom gameRoom = gameRoomMap.get(roomId);
         return GameRoomSimpleResponseDto.builder()
-                .title(gameRoom.getTitle())
+                .theme(gameRoom.getTheme())
                 .name(gameRoom.getName())
                 .questionCount(gameRoom.getQuestionCount())
                 .quizLevel(gameRoom.getQuizLevel())
@@ -144,7 +143,7 @@ public class GameRoomService {
         GameRoom gameRoom = gameRoomMap.get(roomId);
         log.info("gameRoom test: {}", gameRoom);
         return QuestionRequestDto.builder()
-                .title(gameRoom.getTitle().getValue())
+                .theme(gameRoom.getTheme().getValue())
                 .count(gameRoom.getQuestionCount() / 2)
                 .quizLevel(gameRoom.getQuizLevel())
                 .quizType(quizType)

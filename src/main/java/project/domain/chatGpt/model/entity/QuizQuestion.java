@@ -15,8 +15,8 @@ public class QuizQuestion {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name= "QuizTitle_id")
-    QuizTitle quizTitle;
+    @JoinColumn(name= "QuizTheme_id")
+    QuizTheme quizTheme;
 
     @Column(nullable = false)
     String topic;

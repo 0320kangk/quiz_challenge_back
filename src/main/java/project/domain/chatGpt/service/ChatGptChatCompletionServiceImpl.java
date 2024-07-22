@@ -15,9 +15,9 @@ import org.springframework.web.client.RestTemplate;
 import project.domain.chatGpt.config.ChatGptProperties;
 import project.domain.chatGpt.model.dto.*;
 import project.domain.chatGpt.model.entity.QuizQuestion;
-import project.domain.chatGpt.model.entity.QuizTitle;
+import project.domain.chatGpt.model.entity.QuizTheme;
 import project.domain.chatGpt.repository.QuizQuestionsRepository;
-import project.domain.chatGpt.repository.QuizTitleRepository;
+import project.domain.chatGpt.repository.QuizThemeRepository;
 import project.domain.chatGpt.util.ChatGptUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
     private final ChatGptProperties chatGptProperties;
     private final RestTemplate restTemplate;
     private final QuizQuestionsRepository quizQuestionsRepository;
-    private final QuizTitleRepository quizTitleRepository;
+    private final QuizThemeRepository quizThemeRepository;
     @Override
     @Transactional
     public ChatCompletionResponseDto getChatCompletion(QuestionRequestDto questionRequestDto) throws JsonProcessingException {
@@ -40,12 +40,12 @@ public class ChatGptChatCompletionServiceImpl implements ChatGptChatCompletionSe
         headers.set("Authorization", "Bearer " + chatGptProperties.getApiKey());
 
         String systemContent = ChatGptUtil.createSystemContent(ChatGptUtil.createSystemQuestion(questionRequestDto));
-        log.info("questionRequestDto.getTitle() {}",questionRequestDto.getTitle());
-        QuizTitle quizTitle = quizTitleRepository.findByTitle(questionRequestDto.getTitle()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
-        List<QuizQuestion> byQuizTitle = quizQuestionsRepository.findByQuizTitle(quizTitle);
+        log.info("questionRequestDto.getTheme() {}",questionRequestDto.getTheme());
+        QuizTheme quizTheme = quizThemeRepository.findByTheme(questionRequestDto.getTheme()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        List<QuizQuestion> byQuizTheme = quizQuestionsRepository.findByQuizTheme(quizTheme);
 
         Random random = new Random();
-        QuizQuestion quizQuestion = byQuizTitle.get(random.nextInt(byQuizTitle.size()));
+        QuizQuestion quizQuestion = byQuizTheme.get(random.nextInt(byQuizTheme.size()));
         String userContent = ChatGptUtil.createUserContent(questionRequestDto.getCount(), quizQuestion.getTopic());
 
         Messages  systemMessage = Messages

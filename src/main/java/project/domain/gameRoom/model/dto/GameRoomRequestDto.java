@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import project.domain.chatGpt.model.enums.QuizLevel;
-import project.domain.chatGpt.model.enums.QuizTitleEnum;
+import project.domain.chatGpt.model.enums.QuizThemeEnum;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class GameRoomRequestDto {
     @NotNull
     private Integer questionCount;
     @NotNull
-    private QuizTitleEnum title;
+    private QuizThemeEnum theme;
     @NotNull
     QuizLevel quizLevel;
 }
