@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import project.domain.chatGpt.model.dto.ChatCompletionResponseDto;
 import project.domain.chatGpt.model.dto.ChatContent;
 import project.domain.chatGpt.model.dto.QuestionRequestDto;
-import project.domain.chatGpt.model.entity.QuizQuestion;
 
 import java.util.List;
 

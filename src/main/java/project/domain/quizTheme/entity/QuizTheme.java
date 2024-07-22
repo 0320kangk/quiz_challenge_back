@@ -1,4 +1,4 @@
-package project.domain.chatGpt.model.entity;
+package project.domain.quizTheme.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

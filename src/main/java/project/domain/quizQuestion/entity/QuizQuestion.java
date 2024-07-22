@@ -1,7 +1,8 @@
-package project.domain.chatGpt.model.entity;
+package project.domain.quizQuestion.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import project.domain.quizTheme.entity.QuizTheme;
 
 @Entity
 @Getter
