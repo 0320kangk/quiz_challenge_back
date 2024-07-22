@@ -40,7 +40,7 @@ public class ChatGptController {
     public ResponseEntity<?> getChatCompletionContent(@RequestBody @Validated QuestionRequestDto questionRequestDto)  {
         int retries = 0;
         List<ChatContent> chatContent = new ArrayList<>();
-        while( chatContent.size() != questionRequestDto.getCount() && retries < MAX_RETRIES  ){
+        while( chatContent.size() != questionRequestDto.getCount() && retries < MAX_RETRIES){
             try {
                 ChatCompletionResponseDto chatCompletion = chatGptChatCompletionServiceImpl.getChatCompletion(questionRequestDto);
                 chatContent = chatGptChatCompletionServiceImpl.getChatContent(chatCompletion);
@@ -58,7 +58,4 @@ public class ChatGptController {
         }
         return ResponseEntity.ok(chatContent);
     }
-
-
-
 }

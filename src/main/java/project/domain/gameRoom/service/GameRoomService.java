@@ -158,5 +158,12 @@ public class GameRoomService {
     public String getNameById(String id){
         return idToNameMap.get(id);
     }
+    public  GameRoomStatus getGameRoomStatus(String roomId) {
+         return gameRoomMap.get(roomId).getStatus();
+    }
+    public void changeGameRoomPlaying(String roomId) {
+        gameRoomMap.get(roomId).setStatus(GameRoomStatus.PLAYING);
+
+    }
 
 }

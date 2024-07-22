@@ -10,6 +10,7 @@ import project.domain.chatGpt.model.enums.QuizType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class QuestionRequestDto {
     @NotNull
     String title;

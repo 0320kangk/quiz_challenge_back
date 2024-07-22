@@ -13,8 +13,6 @@ import project.domain.chatGpt.model.enums.QuizTitleEnum;
 public class GameRoomSimpleResponseDto {
     private String name;
     private QuizTitleEnum title;
-
     private Integer questionCount;
-
     QuizLevel quizLevel;
 }
