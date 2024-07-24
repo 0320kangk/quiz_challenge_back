@@ -11,7 +11,7 @@ import project.domain.chatGpt.model.enums.QuizThemeEnum;
 @Builder
 public class GameRoomSimpleResponseDto {
     private String name;
-    private QuizThemeEnum theme;
+    private String theme;
     private Integer questionCount;
     QuizLevel quizLevel;
 }

@@ -82,7 +82,6 @@ public class GameRoomService {
         if (participants.size() >= maxRoomPeople) {
             throw new IllegalStateException("방이 꽉 찼습니다.");
         }
-
         participants.add(GameRoomParticipant.builder()
                 .name(name)
                 .characterName(member.getCharacterImg().getImgName())
@@ -123,8 +122,6 @@ public class GameRoomService {
         }
         throw new IllegalArgumentException("잘못된 roomId 입니다.");
     }
-
-
     public String getIdToRoomId(String id) {
         return nameToRoomMap.get(idToNameMap.get(id));
     }
@@ -132,7 +129,7 @@ public class GameRoomService {
     public GameRoomSimpleResponseDto getGameRoomSimpleResponseDto (String roomId) {
         GameRoom gameRoom = gameRoomMap.get(roomId);
         return GameRoomSimpleResponseDto.builder()
-                .theme(gameRoom.getTheme())
+                .theme(gameRoom.getTheme().getValue())
                 .name(gameRoom.getName())
                 .questionCount(gameRoom.getQuestionCount())
                 .quizLevel(gameRoom.getQuizLevel())

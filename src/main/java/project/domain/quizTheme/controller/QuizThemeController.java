@@ -3,8 +3,6 @@ package project.domain.quizTheme.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.domain.quizTheme.entity.QuizTheme;
-import project.domain.quizTheme.repository.QuizThemeRepository;
 import project.domain.quizTheme.service.QuizThemeService;
 
 import java.util.List;

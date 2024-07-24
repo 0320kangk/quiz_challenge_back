@@ -51,4 +51,5 @@ public class GameRoomController {
         gameRoomService.changeGameRoomPlaying(roomId);
         return ResponseEntity.ok().body(roomId + ": 방을 'PLAYING' 상태로 변경 성공.");
     }
+
 }
