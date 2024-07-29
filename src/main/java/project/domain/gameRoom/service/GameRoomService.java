@@ -161,5 +161,9 @@ public class GameRoomService {
         gameRoomMap.get(roomId).setStatus(GameRoomStatus.PLAYING);
 
     }
+    public void changeGameRoomWaiting(String roomId) {
+        gameRoomMap.get(roomId).setStatus(GameRoomStatus.WAITING);
+
+    }
 
 }

@@ -10,7 +10,7 @@ public class UrlConst  {
 //            "/api/gameRoom/create",
             "/api/gameRoom/enter/{roomId}",
             "/api/gameRoom/all",
-            "/chat/**",
+            "/api/chat/**",
             "/quiz/**",
             "/api/characterImg/all",
             "/api/characterImg/{characterImg}",

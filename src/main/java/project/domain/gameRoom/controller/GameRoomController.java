@@ -51,5 +51,10 @@ public class GameRoomController {
         gameRoomService.changeGameRoomPlaying(roomId);
         return ResponseEntity.ok().body(roomId + ": 방을 'PLAYING' 상태로 변경 성공.");
     }
+    @PostMapping("/api/gameRoom/waiting/{roomId}")
+    public ResponseEntity<String> changeGameRoomWaiting(@PathVariable("roomId") String roomId) {
+        gameRoomService.changeGameRoomWaiting(roomId);
+        return ResponseEntity.ok().body(roomId + ": 방을 'WAITING' 상태로 변경 성공.");
+    }
 
 }

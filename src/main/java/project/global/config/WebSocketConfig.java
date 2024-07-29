@@ -24,9 +24,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat")
+        registry.addEndpoint("/api/chat")
                 .setAllowedOrigins("http://localhost:3000",
                         "https://localhost:3000",
+                        "https://quizchallenge.site",
+                        "http://quizchallenge.site",
                         "http://ec2-52-64-12-71.ap-southeast-2.compute.amazonaws.com:3000",
                         "https://ec2-52-64-12-71.ap-southeast-2.compute.amazonaws.com:3000")
                 .addInterceptors()

@@ -42,7 +42,7 @@ public class CharacterImgController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
-    @PostMapping("/characterImg/select/{characterName}")
+    @PostMapping("/api/characterImg/select/{characterName}")
     public  ResponseEntity<String> selectCharacterImg(@PathVariable("characterName") String characterName, @AuthenticationPrincipal UserDetails userDetails) {
         characterImgService.updateMemberCharacterImg (userDetails.getUsername(),characterName);
         return ResponseEntity.ok("캐릭터 선택 성공");
