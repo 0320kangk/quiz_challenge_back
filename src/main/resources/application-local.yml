@@ -1,11 +1,15 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #local??
-    url: jdbc:mysql://localhost:3306/quiz_challenge?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: ${SPRING_DATASOURCE_URL}
+
+    # local: jdbc:mysql://localhost:3306/quiz_challenge?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     #    docker ??
     #    url: jdbc:mysql://mysql-container:3306/keyAppsk?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root #local, docker
-    password: 1234 #local. docker
+    username: ${SPRING_DATASOURCE_USERNAME} #local, docker
+    password: ${SPRING_DATASOURCE_PASSWORD} #local. docker
 
 character-img-path : ${CHARACTER_IMG_PATH}
