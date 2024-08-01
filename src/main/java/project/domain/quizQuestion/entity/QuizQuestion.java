@@ -2,7 +2,7 @@ package project.domain.quizQuestion.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import project.domain.quizTheme.entity.QuizTheme;
+import project.domain.quizTheme.model.entity.QuizTheme;
 
 @Entity
 @Getter

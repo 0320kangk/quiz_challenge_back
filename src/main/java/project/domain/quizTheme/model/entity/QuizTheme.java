@@ -1,4 +1,4 @@
-package project.domain.quizTheme.entity;
+package project.domain.quizTheme.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

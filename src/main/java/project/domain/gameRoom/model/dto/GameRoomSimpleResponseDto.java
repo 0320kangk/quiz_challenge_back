@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import project.domain.chatGpt.model.enums.QuizLevel;
-import project.domain.chatGpt.model.enums.QuizThemeEnum;
 
 @Getter
 @Setter

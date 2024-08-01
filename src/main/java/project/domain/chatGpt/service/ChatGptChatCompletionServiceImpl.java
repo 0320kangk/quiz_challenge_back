@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import project.domain.chatGpt.config.ChatGptProperties;
 import project.domain.chatGpt.model.dto.*;
 import project.domain.quizQuestion.entity.QuizQuestion;
-import project.domain.quizTheme.entity.QuizTheme;
+import project.domain.quizTheme.model.entity.QuizTheme;
 import project.domain.quizQuestion.repository.QuizQuestionsRepository;
 import project.domain.quizTheme.repository.QuizThemeRepository;
 import project.domain.chatGpt.util.ChatGptUtil;
