@@ -14,6 +14,7 @@ public class UrlConst  {
             "/quiz/**",
             "/api/characterImg/all",
             "/api/characterImg/{characterImg}",
+            "/api/quizTheme/all"
 
     };
 }
