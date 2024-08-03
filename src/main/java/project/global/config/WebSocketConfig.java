@@ -29,8 +29,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         "https://localhost:3000",
                         "https://quizchallenge.site",
                         "http://quizchallenge.site",
-                        "http://ec2-52-64-12-71.ap-southeast-2.compute.amazonaws.com:3000",
-                        "https://ec2-52-64-12-71.ap-southeast-2.compute.amazonaws.com:3000")
+                        "http://www.quizchallenge.site",
+                        "https://www.quizchallenge.site")
                 .addInterceptors()
                 .withSockJS();//socket 연결 경로
     }
