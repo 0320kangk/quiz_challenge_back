@@ -5,7 +5,9 @@
 > 각종 다양한 분야에 대한 퀴즈 게임 서비스 제공
 >  [퀴즈 챌린지 프론트 엔드 링크](https://github.com/0320kangk/quiz_challenge_front.git)
 
+### [퀴즈 챌린지 프론트 엔드 링크](https://github.com/0320kangk/quiz_challenge_front.git)
 </br>
+
 
 
 ## 📕 프로젝트 목적 및 내용
@@ -114,3 +116,4 @@
   + User 요청에 대하여 서버는 Chat GPT-3.5 요청에 최적화 된 문장 생성
   + 서버는 Chat Gpt-3.5 로 부터 퀴즈 문제를 받은 후 가공하여 User에게 제공. </br>
 ![gpt-3.5.png](readMeImg/gpt-3.5.png)
+
