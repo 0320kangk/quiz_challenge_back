@@ -22,7 +22,7 @@
 
 ## 📝 주요 업무 및 상세 역할
 
----
+
 
 + 주요 업무
   + 풀 스택 개발 (개인 프로젝트)
@@ -91,7 +91,7 @@
 + JWT
   + Client가 Server로 로그인 요청을 보내면 Client에게 JWT 토큰을 발급.
   + 만약 Client가 API를 통해 접근하게 되면 JWT토큰을 함께 전달하며, Server가 토큰을 검증한 후 Client에게 응답을 전송.
-  ![jwt.png](readMeImg/jwt.png)
+![jwt.png](readMeImg/jwt.png)
 </br>
 </br>
 </br>
