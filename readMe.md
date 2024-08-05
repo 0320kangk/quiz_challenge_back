@@ -91,6 +91,7 @@
 + JWT
   + Client가 Server로 로그인 요청을 보내면 Client에게 JWT 토큰을 발급.
   + 만약 Client가 API를 통해 접근하게 되면 JWT토큰을 함께 전달하며, Server가 토큰을 검증한 후 Client에게 응답을 전송.
+
 ![jwt.png](readMeImg/jwt.png)
 </br>
 </br>
@@ -98,6 +99,7 @@
 + WebSocket
   + 단체 퀴즈 기능에서 실시간 소통을 위해 socket 통신이 사용. 
   + 게임방이 추가되거나 유저가 게임방을 나가는 등 방 정보에 변동 사항이 생긴다면, 서버에 전달. 서버가 해당 유저가 퀴즈를 진행할 때 서버에서 퀴즈가 전송되고, 유저는 서버로 퀴즈 정답을 전송.
+
 ![game.png](readMeImg/game.png)
 </br>
 </br>
@@ -106,4 +108,5 @@
   + User가 원하는 퀴즈 문제 요청
   + User 요청에 대하여 서버는 Chat GPT-3.5 요청에 최적화 된 문장 생성
   + 서버는 Chat Gpt-3.5 로 부터 퀴즈 문제를 받은 후 가공하여 User에게 제공
+
 ![gpt-3.5.png](readMeImg/gpt-3.5.png)
