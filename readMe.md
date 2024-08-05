@@ -95,20 +95,19 @@
   + Nginx가 프록시 서버 역할을 하게 하여 외부로 부터 서버를 숨겨 보안을 강화 </br>
 ![https.png](readMeImg/https.png)
 </br>
-</br>
-</br>
+
 
 + JWT
   + Client가 Server로 로그인 요청을 보내면 Client에게 JWT 토큰을 발급.
   + 만약 Client가 API를 통해 접근하게 되면 JWT토큰을 함께 전달하며, Server가 토큰을 검증한 후 Client에게 응답을 전송. </br>
 ![jwt.png](readMeImg/jwt.png)
-</br></br></br>
+</br>
 
 + WebSocket
   + 단체 퀴즈 기능에서 실시간 소통을 위해 socket 통신이 사용. 
   + 게임방이 추가되거나 유저가 게임방을 나가는 등 방 정보에 변동 사항이 생긴다면, 서버에 전달. 서버가 해당 유저가 퀴즈를 진행할 때 서버에서 퀴즈가 전송되고, 유저는 서버로 퀴즈 정답을 전송. </br>
 ![game.png](readMeImg/game.png)
-</br></br></br>
+</br>
 
 + Open AI Chat GPT-3.5
   + User가 원하는 퀴즈 문제 요청
