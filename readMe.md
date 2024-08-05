@@ -3,7 +3,6 @@
 
 > 퀴즈 게임을 통한 흥미로운 교육 서비스 제공 </br>
 > 각종 다양한 분야에 대한 퀴즈 게임 서비스 제공 </br>
->  [퀴즈 챌린지 프론트 엔드 링크](https://github.com/0320kangk/quiz_challenge_front.git)
 
 ### [퀴즈 챌린지 프론트 엔드 링크](https://github.com/0320kangk/quiz_challenge_front.git)
 </br>
