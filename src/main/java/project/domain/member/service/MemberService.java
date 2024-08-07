@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.domain.characterImg.entity.CharacterImg;
 import project.domain.characterImg.repository.CharacterImgRepository;
+import project.domain.characterImg.service.CharacterImgService;
 import project.domain.member.dto.JoinFormDto;
 import project.domain.member.dto.MyMemberInfoDto;
 import project.domain.member.entity.Authority;
@@ -23,18 +24,14 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final CharacterImgRepository characterImgRepository;
+    private final CharacterImgService characterImgService;
 
     @Transactional
     public void joinMember(JoinFormDto joinFormDto){
-
-        // 가입되어 있지 않은 회원이면,
-        // 권한 정보 만들고
         Authority authority = Authority.builder()
                 .authorityName(Role.GUEST.getKey())
                 .build();
-        CharacterImg characterImg = characterImgRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("1번 캐릭터가 없습니다."));
-
+        CharacterImg characterImg = characterImgService.getDefaultCharacterImg();
         Member member = Member.builder()
                 .name(joinFormDto.getName())
                 .email(joinFormDto.getEmail())
@@ -44,7 +41,6 @@ public class MemberService {
                 .activated(true)
                 .createdDate(LocalDateTime.now())
                 .build();
-
         memberRepository.save(member);
     }
 

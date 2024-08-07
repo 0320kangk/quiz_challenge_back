@@ -21,6 +21,10 @@ public class CharacterImgService {
     private final CharacterImgRepository characterImgRepository;
     @Value("${character-img-path}")
     private String characterImgPath;
+    public CharacterImg getDefaultCharacterImg() {
+        return characterImgRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("1번 캐릭터가 없습니다."));
+    }
     @Transactional
     public void changeCharacterImg(String memberEmail, String characterImgName) {
         Member member = memberRepository.findOneByEmail(memberEmail).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
