@@ -1,5 +1,6 @@
 package project.domain.chatGpt.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class ChatCompletionResponseDto {
     @Getter
     @Setter
     @ToString
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Message {
         private String role;
         private String content; // 수정된 부분
